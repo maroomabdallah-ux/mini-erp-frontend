@@ -4,6 +4,8 @@ export const PERMISSIONS = Object.freeze({
   AUDIT_READ: 'audit.read',
   PRODUCTS_READ: 'products.read',
   PRODUCTS_MANAGE: 'products.manage',
+  WAREHOUSES_READ: 'warehouses.read',
+  WAREHOUSES_MANAGE: 'warehouses.manage',
 })
 
 export function hasPermission(user, permission) {

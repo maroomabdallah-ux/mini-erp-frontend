@@ -26,6 +26,7 @@ A modern, permission-aware frontend for the Mini ERP system. The application is 
   - Create, update, and deactivate products
   - CSV bulk import
 - Hierarchical category management
+- Warehouse management with search, status filters, pagination, and role-aware actions
 - Loading, empty, error, and confirmation states
 - Toast notifications for successful and failed operations
 
@@ -99,10 +100,10 @@ These credentials are intended for local development only.
 
 ## Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the Vite development server |
-| `npm run build` | Create an optimized production build |
+| Command           | Description                          |
+| ----------------- | ------------------------------------ |
+| `npm run dev`     | Start the Vite development server    |
+| `npm run build`   | Create an optimized production build |
 | `npm run preview` | Preview the production build locally |
 
 ## Project Structure
@@ -122,7 +123,8 @@ src/
 │   ├── dashboard/             # Role-aware overview page
 │   ├── products/              # Products, categories, dialogs, and API calls
 │   ├── roles/                 # Roles and permissions management
-│   └── users/                 # User management
+│   ├── users/                 # User management
+│   └── warehouses/            # Warehouse management
 ├── lib/
 │   └── utils.js               # Shared utility functions
 ├── shared/
@@ -150,24 +152,26 @@ The frontend hides unauthorized actions for usability, while the backend remains
 
 The implemented frontend permissions are:
 
-| Permission | Frontend access |
-|---|---|
-| `users.manage` | User management |
-| `roles.manage` | Role and permission management |
-| `audit.read` | Audit log access |
-| `products.read` | View products and categories |
-| `products.manage` | Create, update, deactivate, and import products and categories |
+| Permission          | Frontend access                                                |
+| ------------------- | -------------------------------------------------------------- |
+| `users.manage`      | User management                                                |
+| `roles.manage`      | Role and permission management                                 |
+| `audit.read`        | Audit log access                                               |
+| `products.read`     | View products and categories                                   |
+| `products.manage`   | Create, update, deactivate, and import products and categories |
+| `warehouses.read`   | View and search warehouses                                     |
+| `warehouses.manage` | Create, update, and deactivate warehouses                      |
 
 The current product access matrix is:
 
-| Role | View products | Manage products |
-|---|---:|---:|
-| Admin | Yes | Yes |
-| Purchasing Officer | Yes | Yes |
-| Sales Officer | Yes | No |
-| Warehouse Keeper | Yes | No |
-| Accountant | Yes | No |
-| Manager | Yes | No |
+| Role               | View products | Manage products |
+| ------------------ | ------------: | --------------: |
+| Admin              |           Yes |             Yes |
+| Purchasing Officer |           Yes |             Yes |
+| Sales Officer      |           Yes |              No |
+| Warehouse Keeper   |           Yes |              No |
+| Accountant         |           Yes |              No |
+| Manager            |           Yes |              No |
 
 Permissions can be changed by an authorized administrator from the Roles & Permissions page.
 
@@ -209,7 +213,7 @@ The optimized files are generated in the `dist` directory. Configure the product
 
 ## Backend Dependency
 
-This repository contains the frontend only. It requires the Mini ERP FastAPI backend for authentication, permissions, users, roles, audit logs, products, and categories.
+This repository contains the frontend only. It requires the Mini ERP FastAPI backend for authentication, permissions, users, roles, audit logs, products, categories, and warehouses.
 
 The backend should allow the frontend origin through its CORS configuration.
 
@@ -229,5 +233,6 @@ The completed frontend modules are:
 - Roles and permissions
 - Audit logs
 - Products and categories
+- Warehouses
 
-Inventory, warehouses, suppliers, customers, purchasing, sales, accounting, and reports will be added as their backend features are completed.
+Inventory, suppliers, customers, purchasing, sales, accounting, and reports will be added as their backend features are completed.

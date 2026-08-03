@@ -6,6 +6,7 @@ import { DashboardPage } from '@/features/dashboard/dashboard-page'
 import { RolesPage } from '@/features/roles/roles-page'
 import { AuditPage } from '@/features/audit/audit-page'
 import { ProductsPage } from '@/features/products/products-page'
+import { WarehousesPage } from '@/features/warehouses/warehouses-page'
 import { AppShell } from '@/components/layout/app-shell'
 import { PERMISSIONS, hasPermission } from '@/shared/permissions/permissions'
 
@@ -15,6 +16,7 @@ const pages = {
   roles: { component: RolesPage, permission: PERMISSIONS.ROLES_MANAGE },
   audit: { component: AuditPage, permission: PERMISSIONS.AUDIT_READ },
   products: { component: ProductsPage, permission: PERMISSIONS.PRODUCTS_READ },
+  warehouses: { component: WarehousesPage, permission: PERMISSIONS.WAREHOUSES_READ },
 }
 
 function AppContent() {
