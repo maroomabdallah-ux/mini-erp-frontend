@@ -81,6 +81,8 @@ Authentication flow:
 
 The current user profile contains the effective roles and permissions used to build the navigation and hide unauthorized actions.
 
+Every authenticated user also has a Settings workspace for updating personal details, changing their password, choosing Light/Dark/System appearance, and selecting English or Arabic. The implemented application pages, dialogs, form hints, filters, states, and navigation support automatic English LTR and Arabic RTL presentation. Preferences are stored locally per browser.
+
 ## 6. Permission Enforcement
 
 The frontend uses permissions for navigation and interface behavior. The backend remains the final security authority and validates every protected request.
@@ -96,6 +98,12 @@ Implemented frontend permissions:
 | `products.manage` | Create, update, deactivate, and import products and categories |
 | `warehouses.read` | View and search warehouses |
 | `warehouses.manage` | Create, update, and deactivate warehouses |
+| `inventory.read` | View stock by location and movement history |
+| `inventory.adjust` | Record manual stock adjustments |
+| `inventory.transfer` | Transfer stock between warehouses |
+| `inventory.count` | Record physical stock counts |
+| `inventory.count.approve` | Approve counts and apply variances |
+| `inventory.low_stock.read` | View aggregate low-stock alerts |
 
 Users may need to sign out and sign in again after their backend permissions change.
 
@@ -230,7 +238,26 @@ Read operations require `warehouses.read`. Management actions require `warehouse
 
 The backend prevents deactivating a warehouse that currently holds stock.
 
-## 15. API Client
+## 15. Inventory
+
+The Inventory workspace supports:
+
+- Stock quantities for each product and warehouse pair.
+- Search and warehouse filtering with server-side pagination.
+- A filtered total quantity across all matching locations.
+- Movement history by product, warehouse, and movement type.
+- Manual positive or negative adjustments with a required reason.
+- Atomic warehouse-to-warehouse transfers with available-stock validation and before/after previews.
+- Physical stock counts with system-versus-counted variance previews.
+- A pending approval workflow that changes stock only after authorized review.
+- Aggregate low-stock alerts based on each product's minimum stock level.
+- Permission-aware tabs and actions.
+
+Stock and movement access requires `inventory.read`. Manual adjustments require `inventory.adjust`. Warehouse transfers require `inventory.transfer`. Count entry requires `inventory.count`, while approval requires `inventory.count.approve`. Low-stock alerts require `inventory.low_stock.read`.
+
+Default role access follows the backend seed policy: Admin has all Inventory actions, Warehouse Keeper can view, adjust, and read alerts, Sales Officer can view stock and movements, and Manager can view stock, movements, and alerts.
+
+## 16. API Client
 
 All feature APIs use the centralized client in:
 
@@ -248,7 +275,7 @@ The client handles:
 - Standard API error extraction.
 - Session-expiration events.
 
-## 16. Frontend Architecture
+## 17. Frontend Architecture
 
 The application uses a simple feature-based architecture:
 
@@ -260,7 +287,7 @@ The application uses a simple feature-based architecture:
 - Permission constants and checks are shared across the application.
 - Global responsive styles and the design system live in one stylesheet.
 
-## 17. Project Structure
+## 18. Project Structure
 
 ```text
 src/
@@ -275,8 +302,10 @@ src/
 │   ├── audit/                 # Audit log API and interface
 │   ├── auth/                  # Authentication, provider, and login
 │   ├── dashboard/             # Role-aware overview
+│   ├── inventory/             # Stock, movements, alerts, and adjustments
 │   ├── products/              # Products and categories
 │   ├── roles/                 # Roles and permissions
+│   ├── settings/              # Profile, security, language, and appearance
 │   ├── users/                 # User management
 │   └── warehouses/            # Warehouse management
 ├── lib/
@@ -289,7 +318,7 @@ src/
 └── main.jsx                   # React bootstrap file
 ```
 
-## 18. Technology Stack
+## 19. Technology Stack
 
 - React 19
 - JavaScript with ES modules
@@ -303,7 +332,7 @@ src/
 - Lucide React
 - Sonner
 
-## 19. User Interface Standards
+## 20. User Interface Standards
 
 The implemented interface includes:
 
@@ -316,7 +345,7 @@ The implemented interface includes:
 - A cool-neutral visual system with accessible status colors.
 - Feature-specific layouts where the data benefits from a different presentation.
 
-## 20. Available Scripts
+## 21. Available Scripts
 
 Start the development server:
 
@@ -336,7 +365,7 @@ Preview the production build:
 npm run preview
 ```
 
-## 21. Production Build
+## 22. Production Build
 
 Run:
 
@@ -352,7 +381,7 @@ dist/
 
 Set the correct `VITE_API_URL` before building for a non-local environment.
 
-## 22. Current Scope
+## 23. Current Scope
 
 Completed frontend modules:
 
@@ -364,12 +393,11 @@ Completed frontend modules:
 - Products and categories
 - Product CSV import
 - Warehouses
-
-The Inventory backend currently supports stock levels, movement history, manual adjustments, and low-stock alerts. The Inventory frontend has not been implemented yet.
+- Inventory stock overview, movements, adjustments, transfers, physical counts, approvals, and low-stock alerts
+- Personal settings with profile editing, password changes, dark mode, and bilingual direction support
 
 Future frontend modules include:
 
-- Inventory
 - Suppliers
 - Customers
 - Purchasing
@@ -377,7 +405,7 @@ Future frontend modules include:
 - Accounting
 - Reports
 
-## 23. Quality Checks
+## 24. Quality Checks
 
 Verify the production build before considering a frontend feature complete:
 

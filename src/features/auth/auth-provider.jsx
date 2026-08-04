@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { getMe, login as loginRequest, logout as logoutRequest } from './api'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
+  const queryClient = useQueryClient()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(Boolean(localStorage.getItem('erp_access_token')))
-  const clear = () => { localStorage.removeItem('erp_access_token'); localStorage.removeItem('erp_refresh_token'); setUser(null) }
+  const clear = () => { localStorage.removeItem('erp_access_token'); localStorage.removeItem('erp_refresh_token'); queryClient.clear(); setUser(null) }
   const refreshUser = async () => { const currentUser = await getMe(); setUser(currentUser); return currentUser }
   useEffect(() => {
     const load = async () => { try { await refreshUser() } catch { clear() } finally { setLoading(false) } }
