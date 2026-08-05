@@ -2,7 +2,7 @@
 
 Frontend application built with React, JavaScript, Vite, Tailwind CSS, shadcn-style components, TanStack Query, and permission-based navigation.
 
-The currently completed scope includes authentication, session restoration, dashboard, users, roles, permissions, audit logs, categories, products, CSV product import, and warehouses.
+The completed scope includes authentication, role-aware dashboards, users, roles, permissions, audit logs, products and categories, suppliers, warehouses, inventory, purchase orders, goods receipts, customers, and sales quotations.
 
 ## 1. Run the Project
 
@@ -74,7 +74,7 @@ Authentication flow:
 
 1. The frontend calls `POST /auth/login`.
 2. The backend returns an access token, refresh token, and user profile.
-3. The frontend stores the current tokens in local storage.
+3. The frontend stores authentication tokens in session storage, so closing the browser tab ends the local session.
 4. The centralized API client adds the access token to protected requests.
 5. When the access token expires, the client attempts one token refresh.
 6. If refresh fails, the local session is cleared and the login page is displayed.
@@ -98,6 +98,19 @@ Implemented frontend permissions:
 | `products.manage` | Create, update, deactivate, and import products and categories |
 | `warehouses.read` | View and search warehouses |
 | `warehouses.manage` | Create, update, and deactivate warehouses |
+| `suppliers.read` | View suppliers |
+| `suppliers.manage` | Create, update, and deactivate suppliers |
+| `customers.read` | View customers |
+| `customers.manage` | Create, update, and deactivate customers |
+| `purchase_orders.read` | View purchase orders |
+| `purchase_orders.create` | Create purchase orders |
+| `purchase_orders.update` | Edit and submit draft purchase orders |
+| `purchase_orders.approve` | Approve or reject purchase orders |
+| `purchase_orders.cancel` | Cancel purchase orders |
+| `goods_receipts.read` | View goods receipts |
+| `goods_receipts.create` | Receive approved purchase orders |
+| `quotations.read` | View sales quotations |
+| `quotations.manage` | Create, edit, send, accept, reject, and expire quotations |
 | `inventory.read` | View stock by location and movement history |
 | `inventory.adjust` | Record manual stock adjustments |
 | `inventory.transfer` | Transfer stock between warehouses |
@@ -257,7 +270,43 @@ Stock and movement access requires `inventory.read`. Manual adjustments require 
 
 Default role access follows the backend seed policy: Admin has all Inventory actions, Warehouse Keeper can view, adjust, and read alerts, Sales Officer can view stock and movements, and Manager can view stock, movements, and alerts.
 
-## 16. API Client
+## 16. Suppliers and Purchasing
+
+The Suppliers workspace supports search, status filtering, contact and credit-term management, editing, and soft deactivation.
+
+The Purchase Orders workspace implements the complete purchasing flow:
+
+```text
+Draft → Pending Approval → Approved → Goods Receipt → Warehouse Stock
+```
+
+Authorized users can create and edit draft orders using active suppliers and products, submit them for approval, approve or reject them, cancel active orders, and receive approved goods into a selected warehouse. Goods receipt updates inventory and movement history through the backend transaction.
+
+## 17. Customers
+
+The Customers workspace supports:
+
+- Automatic customer codes.
+- Contact person, email, phone, address, city, and tax-number fields.
+- Approved customer credit limits.
+- Search, city and status filters, pagination, editing, and soft deactivation.
+- Permission-aware read and management actions.
+
+Sales Officers manage customer records. Managers and Accountants have read access, while Administrators have full access.
+
+## 18. Sales Quotations
+
+The Quotations workspace builds commercial offers from active customers and catalog products. It includes whole-unit quantities, customer-facing unit prices, validity dates, discounts, tax, notes, and automatic total calculations.
+
+Implemented workflow:
+
+```text
+Draft → Sent → Accepted / Rejected / Expired
+```
+
+Only drafts can be edited. Rejected quotations retain the customer decision reason, and accepted quotations are ready for the upcoming Sales Orders conversion flow. Quotations do not reserve or deduct stock.
+
+## 19. API Client
 
 All feature APIs use the centralized client in:
 
@@ -275,7 +324,7 @@ The client handles:
 - Standard API error extraction.
 - Session-expiration events.
 
-## 17. Frontend Architecture
+## 20. Frontend Architecture
 
 The application uses a simple feature-based architecture:
 
@@ -287,7 +336,7 @@ The application uses a simple feature-based architecture:
 - Permission constants and checks are shared across the application.
 - Global responsive styles and the design system live in one stylesheet.
 
-## 18. Project Structure
+## 21. Project Structure
 
 ```text
 src/
@@ -301,11 +350,15 @@ src/
 ├── features/
 │   ├── audit/                 # Audit log API and interface
 │   ├── auth/                  # Authentication, provider, and login
+│   ├── customers/             # Customer master data
 │   ├── dashboard/             # Role-aware overview
 │   ├── inventory/             # Stock, movements, alerts, and adjustments
 │   ├── products/              # Products and categories
+│   ├── purchases/             # Purchase orders and goods receipts
+│   ├── quotations/            # Sales quotation workflow
 │   ├── roles/                 # Roles and permissions
 │   ├── settings/              # Profile, security, language, and appearance
+│   ├── suppliers/             # Supplier directory
 │   ├── users/                 # User management
 │   └── warehouses/            # Warehouse management
 ├── lib/
@@ -318,7 +371,7 @@ src/
 └── main.jsx                   # React bootstrap file
 ```
 
-## 19. Technology Stack
+## 22. Technology Stack
 
 - React 19
 - JavaScript with ES modules
@@ -332,7 +385,7 @@ src/
 - Lucide React
 - Sonner
 
-## 20. User Interface Standards
+## 23. User Interface Standards
 
 The implemented interface includes:
 
@@ -345,7 +398,7 @@ The implemented interface includes:
 - A cool-neutral visual system with accessible status colors.
 - Feature-specific layouts where the data benefits from a different presentation.
 
-## 21. Available Scripts
+## 24. Available Scripts
 
 Start the development server:
 
@@ -365,7 +418,7 @@ Preview the production build:
 npm run preview
 ```
 
-## 22. Production Build
+## 25. Production Build
 
 Run:
 
@@ -381,7 +434,7 @@ dist/
 
 Set the correct `VITE_API_URL` before building for a non-local environment.
 
-## 23. Current Scope
+## 26. Current Scope
 
 Completed frontend modules:
 
@@ -392,20 +445,22 @@ Completed frontend modules:
 - Audit logs
 - Products and categories
 - Product CSV import
+- Suppliers
 - Warehouses
 - Inventory stock overview, movements, adjustments, transfers, physical counts, approvals, and low-stock alerts
+- Purchase orders and goods receipts
+- Customers
+- Sales quotations
 - Personal settings with profile editing, password changes, dark mode, and bilingual direction support
 
-Future frontend modules include:
+Remaining frontend modules include:
 
-- Suppliers
-- Customers
-- Purchasing
-- Sales
+- Sales orders and delivery
+- Invoices and payments
 - Accounting
 - Reports
 
-## 24. Quality Checks
+## 27. Quality Checks
 
 Verify the production build before considering a frontend feature complete:
 

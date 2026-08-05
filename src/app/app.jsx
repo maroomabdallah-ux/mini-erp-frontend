@@ -7,6 +7,9 @@ import { RolesPage } from '@/features/roles/roles-page'
 import { AuditPage } from '@/features/audit/audit-page'
 import { ProductsPage } from '@/features/products/products-page'
 import { SuppliersPage } from '@/features/suppliers/suppliers-page'
+import { PurchaseOrdersPage } from '@/features/purchases/purchase-orders-page'
+import { CustomersPage } from '@/features/customers/customers-page'
+import { QuotationsPage } from '@/features/quotations/quotations-page'
 import { WarehousesPage } from '@/features/warehouses/warehouses-page'
 import { InventoryPage } from '@/features/inventory/inventory-page'
 import { SettingsPage } from '@/features/settings/settings-page'
@@ -21,6 +24,9 @@ const pages = {
   audit: { component: AuditPage, permission: PERMISSIONS.AUDIT_READ },
   products: { component: ProductsPage, permission: PERMISSIONS.PRODUCTS_READ },
   suppliers: { component: SuppliersPage, permission: PERMISSIONS.SUPPLIERS_READ },
+  purchases: { component: PurchaseOrdersPage, permission: PERMISSIONS.PURCHASE_ORDERS_READ },
+  customers: { component: CustomersPage, permission: PERMISSIONS.CUSTOMERS_READ },
+  quotations: { component: QuotationsPage, permission: PERMISSIONS.QUOTATIONS_READ },
   warehouses: { component: WarehousesPage, permission: PERMISSIONS.WAREHOUSES_READ },
   inventory: { component: InventoryPage, permission: PERMISSIONS.INVENTORY_READ },
   settings: { component: SettingsPage },

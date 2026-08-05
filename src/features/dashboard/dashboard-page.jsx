@@ -40,8 +40,8 @@ const ROLE_WORKSPACES = [
     tone: "blue",
     purpose: "Manage customers and move demand from quotation to sale.",
     responsibilities: ["Customers", "Quotations", "Sales orders"],
-    available: ["Product and stock visibility"],
-    page: "products",
+    available: ["Customer directory", "Quotation workspace"],
+    page: "quotations",
   },
   {
     name: "Warehouse Keeper",
@@ -126,15 +126,15 @@ function AdminDashboard({ user, onNavigate }) {
 
       <section className="admin-tracking-panel">
         <header>
-          <div><p>Process tracking</p><h2>Product-to-stock journey</h2><span>This shows implementation readiness now. Live purchase-order tracking starts when the Purchase Orders module is built.</span></div>
+          <div><p>Process tracking</p><h2>Product-to-stock journey</h2><span>The procurement workflow is live from supplier order through approval, receiving, and warehouse stock.</span></div>
           <Badge>Procurement flow</Badge>
         </header>
         <div className="admin-process-track">
           <ProcessStep done number="01" title="Product" detail="Catalog record created" action="Open products" onClick={() => onNavigate("products")} />
           <ProcessStep done number="02" title="Supplier" detail="Approved partner selected" action="Open suppliers" onClick={() => onNavigate("suppliers")} />
-          <ProcessStep current number="03" title="Purchase order" detail="Next module to build" />
-          <ProcessStep number="04" title="Manager approval" detail="Planned workflow" />
-          <ProcessStep number="05" title="Goods receipt" detail="Planned workflow" />
+          <ProcessStep done number="03" title="Purchase order" detail="Procurement workflow ready" action="Open purchase orders" onClick={() => onNavigate("purchases")} />
+          <ProcessStep done number="04" title="Manager approval" detail="Controlled approval ready" action="Open purchase orders" onClick={() => onNavigate("purchases")} />
+          <ProcessStep done number="05" title="Goods receipt" detail="Warehouse receiving ready" action="Open purchase orders" onClick={() => onNavigate("purchases")} />
           <ProcessStep done number="06" title="Warehouse stock" detail="Inventory foundation ready" action="Open inventory" onClick={() => onNavigate("inventory")} />
         </div>
       </section>

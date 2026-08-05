@@ -8,7 +8,7 @@ export const DialogClose = DialogPrimitive.Close
 export function DialogContent({ className, children, ...props }) {
   return <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/35 backdrop-blur-[2px] data-[state=open]:animate-in" />
-    <DialogPrimitive.Content dir="ltr" className={cn('fixed left-1/2 top-1/2 z-50 grid max-h-[90vh] w-[calc(100%-2rem)] min-w-0 max-w-xl -translate-x-1/2 -translate-y-1/2 gap-5 overflow-x-hidden overflow-y-auto rounded-2xl border bg-background p-6 shadow-2xl outline-none', className)} {...props}>
+    <DialogPrimitive.Content className={cn('fixed left-1/2 top-1/2 z-50 grid max-h-[90vh] w-[calc(100%-2rem)] min-w-0 max-w-xl -translate-x-1/2 -translate-y-1/2 gap-5 overflow-x-hidden overflow-y-auto rounded-2xl border bg-background p-6 shadow-2xl outline-none', className)} {...props}>
       {children}<DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><X className="size-4" /><span className="sr-only">Close</span></DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>

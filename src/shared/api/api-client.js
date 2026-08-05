@@ -6,7 +6,7 @@ export class ApiError extends Error {
 
 export async function apiRequest(path, options = {}) {
   const { auth = true, retry = true, headers, ...init } = options
-  const token = localStorage.getItem('erp_access_token')
+  const token = sessionStorage.getItem('erp_access_token')
   const contentHeaders = init.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
@@ -14,12 +14,12 @@ export async function apiRequest(path, options = {}) {
   })
 
   if (response.status === 401 && auth && retry) {
-    const refreshToken = localStorage.getItem('erp_refresh_token')
+    const refreshToken = sessionStorage.getItem('erp_refresh_token')
     if (refreshToken) {
       const refreshResponse = await fetch(`${API_URL}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: refreshToken }) })
       if (refreshResponse.ok) {
         const data = await refreshResponse.json()
-        localStorage.setItem('erp_access_token', data.access_token)
+        sessionStorage.setItem('erp_access_token', data.access_token)
         return apiRequest(path, { ...options, retry: false })
       }
     }
