@@ -89,34 +89,34 @@ The frontend uses permissions for navigation and interface behavior. The backend
 
 Implemented frontend permissions:
 
-| Permission | Frontend access |
-|---|---|
-| `users.manage` | View and manage users |
-| `roles.manage` | View and manage roles and permissions |
-| `audit.read` | View audit logs |
-| `products.read` | View products and categories |
-| `products.manage` | Create, update, deactivate, and import products and categories |
-| `warehouses.read` | View and search warehouses |
-| `warehouses.manage` | Create, update, and deactivate warehouses |
-| `suppliers.read` | View suppliers |
-| `suppliers.manage` | Create, update, and deactivate suppliers |
-| `customers.read` | View customers |
-| `customers.manage` | Create, update, and deactivate customers |
-| `purchase_orders.read` | View purchase orders |
-| `purchase_orders.create` | Create purchase orders |
-| `purchase_orders.update` | Edit and submit draft purchase orders |
-| `purchase_orders.approve` | Approve or reject purchase orders |
-| `purchase_orders.cancel` | Cancel purchase orders |
-| `goods_receipts.read` | View goods receipts |
-| `goods_receipts.create` | Receive approved purchase orders |
-| `quotations.read` | View sales quotations |
-| `quotations.manage` | Create, edit, send, accept, reject, and expire quotations |
-| `inventory.read` | View stock by location and movement history |
-| `inventory.adjust` | Record manual stock adjustments |
-| `inventory.transfer` | Transfer stock between warehouses |
-| `inventory.count` | Record physical stock counts |
-| `inventory.count.approve` | Approve counts and apply variances |
-| `inventory.low_stock.read` | View aggregate low-stock alerts |
+| Permission                 | Frontend access                                                |
+| -------------------------- | -------------------------------------------------------------- |
+| `users.manage`             | View and manage users                                          |
+| `roles.manage`             | View and manage roles and permissions                          |
+| `audit.read`               | View audit logs                                                |
+| `products.read`            | View products and categories                                   |
+| `products.manage`          | Create, update, deactivate, and import products and categories |
+| `warehouses.read`          | View and search warehouses                                     |
+| `warehouses.manage`        | Create, update, and deactivate warehouses                      |
+| `suppliers.read`           | View suppliers                                                 |
+| `suppliers.manage`         | Create, update, and deactivate suppliers                       |
+| `customers.read`           | View customers                                                 |
+| `customers.manage`         | Create, update, and deactivate customers                       |
+| `purchase_orders.read`     | View purchase orders                                           |
+| `purchase_orders.create`   | Create purchase orders                                         |
+| `purchase_orders.update`   | Edit and submit draft purchase orders                          |
+| `purchase_orders.approve`  | Approve or reject purchase orders                              |
+| `purchase_orders.cancel`   | Cancel purchase orders                                         |
+| `goods_receipts.read`      | View goods receipts                                            |
+| `goods_receipts.create`    | Receive approved purchase orders                               |
+| `quotations.read`          | View sales quotations                                          |
+| `quotations.manage`        | Create, edit, send, accept, reject, and expire quotations      |
+| `inventory.read`           | View stock by location and movement history                    |
+| `inventory.adjust`         | Record manual stock adjustments                                |
+| `inventory.transfer`       | Transfer stock between warehouses                              |
+| `inventory.count`          | Record physical stock counts                                   |
+| `inventory.count.approve`  | Approve counts and apply variances                             |
+| `inventory.low_stock.read` | View aggregate low-stock alerts                                |
 
 Users may need to sign out and sign in again after their backend permissions change.
 
@@ -124,25 +124,25 @@ Users may need to sign out and sign in again after their backend permissions cha
 
 Product access:
 
-| Role | View products | Manage products |
-|---|---:|---:|
-| Admin | Yes | Yes |
-| Purchasing Officer | Yes | Yes |
-| Sales Officer | Yes | No |
-| Warehouse Keeper | Yes | No |
-| Accountant | Yes | No |
-| Manager | Yes | No |
+| Role               | View products | Manage products |
+| ------------------ | ------------: | --------------: |
+| Admin              |           Yes |             Yes |
+| Purchasing Officer |           Yes |             Yes |
+| Sales Officer      |           Yes |              No |
+| Warehouse Keeper   |           Yes |              No |
+| Accountant         |           Yes |              No |
+| Manager            |           Yes |              No |
 
 Warehouse access:
 
-| Role | View warehouses | Manage warehouses |
-|---|---:|---:|
-| Admin | Yes | Yes |
-| Purchasing Officer | Yes | No |
-| Sales Officer | Yes | No |
-| Warehouse Keeper | Yes | No |
-| Accountant | Yes | No |
-| Manager | Yes | No |
+| Role               | View warehouses | Manage warehouses |
+| ------------------ | --------------: | ----------------: |
+| Admin              |             Yes |               Yes |
+| Purchasing Officer |             Yes |                No |
+| Sales Officer      |             Yes |                No |
+| Warehouse Keeper   |             Yes |                No |
+| Accountant         |             Yes |                No |
+| Manager            |             Yes |                No |
 
 An authorized administrator can change role permissions from the Roles & Permissions page.
 
@@ -304,9 +304,29 @@ Implemented workflow:
 Draft → Sent → Accepted / Rejected / Expired
 ```
 
-Only drafts can be edited. Rejected quotations retain the customer decision reason, and accepted quotations are ready for the upcoming Sales Orders conversion flow. Quotations do not reserve or deduct stock.
+Only drafts can be edited. Rejected quotations retain the customer decision reason. Accepted quotations expose a separate conversion action that creates a Sales Order; quotations do not reserve or deduct stock.
 
-## 19. API Client
+## 19. Sales Orders and Delivery
+
+The Sales Orders workspace provides a controlled fulfillment flow:
+
+```text
+Accepted Quotation → Draft Sales Order → Confirmed → Warehouse Delivery
+```
+
+The register includes search, status filters, operational metrics, complete order details, frozen quotation totals, cancellation reasons, and fulfillment history. Confirmation does not change stock. During delivery, the interface checks every active warehouse, shows available versus required units for each product, and permits selection only when one warehouse can fulfill the entire order. A successful delivery deducts inventory and displays the generated delivery reference.
+
+## 20. Invoices and Payments
+
+The billing workspace converts delivered Sales Orders into customer invoices and follows the complete receivable lifecycle:
+
+```text
+Draft Invoice → Issued → Partially Paid → Paid
+```
+
+It includes eligible-order selection, automatic 30-day due dates, overdue filtering, immutable invoice totals, payment methods and references, partial payments, remaining balances, controlled reversals, cancellation of unpaid documents, accountant alerts, bilingual UI, dark mode, and printable invoice details.
+
+## 21. API Client
 
 All feature APIs use the centralized client in:
 
@@ -324,7 +344,7 @@ The client handles:
 - Standard API error extraction.
 - Session-expiration events.
 
-## 20. Frontend Architecture
+## 22. Frontend Architecture
 
 The application uses a simple feature-based architecture:
 
@@ -336,7 +356,7 @@ The application uses a simple feature-based architecture:
 - Permission constants and checks are shared across the application.
 - Global responsive styles and the design system live in one stylesheet.
 
-## 21. Project Structure
+## 23. Project Structure
 
 ```text
 src/
@@ -371,7 +391,7 @@ src/
 └── main.jsx                   # React bootstrap file
 ```
 
-## 22. Technology Stack
+## 24. Technology Stack
 
 - React 19
 - JavaScript with ES modules
@@ -385,7 +405,7 @@ src/
 - Lucide React
 - Sonner
 
-## 23. User Interface Standards
+## 25. User Interface Standards
 
 The implemented interface includes:
 
@@ -398,7 +418,7 @@ The implemented interface includes:
 - A cool-neutral visual system with accessible status colors.
 - Feature-specific layouts where the data benefits from a different presentation.
 
-## 24. Available Scripts
+## 26. Available Scripts
 
 Start the development server:
 
@@ -418,7 +438,7 @@ Preview the production build:
 npm run preview
 ```
 
-## 25. Production Build
+## 27. Production Build
 
 Run:
 
@@ -434,7 +454,7 @@ dist/
 
 Set the correct `VITE_API_URL` before building for a non-local environment.
 
-## 26. Current Scope
+## 28. Current Scope
 
 Completed frontend modules:
 
@@ -451,16 +471,23 @@ Completed frontend modules:
 - Purchase orders and goods receipts
 - Customers
 - Sales quotations
+- Sales orders, warehouse availability, confirmation, cancellation, and delivery
+- Customer invoices, partial and full payments, balances, reversals, and overdue alerts
+- Accounting dashboard with Cash, Bank, AR, AP, Inventory, and monthly-profit balances
+- Read-first journal register with date, account, source-document, and text filters
+- Journal detail dialogs with separated debit and credit sections and source navigation
+- Hierarchical Chart of Accounts with protected system-account badges
+- Supplier payments with purchase-order paid and outstanding balances
+- Bank-style customer and supplier statements with running balances
+- Invoice accounting timelines linking document, journal, payment, and payment-journal events
+- Printable quotations, sales orders, invoices, and statements
 - Personal settings with profile editing, password changes, dark mode, and bilingual direction support
 
 Remaining frontend modules include:
 
-- Sales orders and delivery
-- Invoices and payments
-- Accounting
 - Reports
 
-## 27. Quality Checks
+## 29. Quality Checks
 
 Verify the production build before considering a frontend feature complete:
 
