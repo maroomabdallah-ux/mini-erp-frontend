@@ -33,6 +33,10 @@ import { customersApi } from "@/features/customers/api";
 import { purchasesApi } from "@/features/purchases/api";
 import { suppliersApi } from "@/features/suppliers/api";
 import { hasPermission, PERMISSIONS } from "@/shared/permissions/permissions";
+import {
+  consumeDocumentTarget,
+  openDocument,
+} from "@/shared/navigation/document-target";
 import { accountingApi } from "./api";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -60,7 +64,14 @@ const SOURCE_LABELS = {
 
 export function AccountingPage({ onNavigate }) {
   const { user } = useAuth();
-  const [tab, setTab] = useState("overview");
+  const [documentTarget] = useState(() => consumeDocumentTarget("accounting"));
+  const [tab, setTab] = useState(() =>
+    documentTarget?.kind === "journal"
+      ? "journals"
+      : documentTarget
+        ? "payments"
+        : "overview",
+  );
   const canManage = hasPermission(user, PERMISSIONS.ACCOUNTS_MANAGE);
   const tabs = [
     ["overview", "Dashboard"],
@@ -94,7 +105,13 @@ export function AccountingPage({ onNavigate }) {
       </div>
       {tab === "overview" && <AccountingDashboard onOpen={setTab} />}
       {tab === "journals" && (
-        <Journals canManage={canManage} onNavigate={onNavigate} />
+        <Journals
+          canManage={canManage}
+          onNavigate={onNavigate}
+          initialEntryId={
+            documentTarget?.kind === "journal" ? documentTarget.id : null
+          }
+        />
       )}
       {tab === "accounts" && <Accounts canManage={canManage} />}
       {tab === "payments" && <SupplierPayments />}
@@ -139,7 +156,7 @@ function AccountingDashboard({ onOpen }) {
   );
 }
 
-function Journals({ canManage, onNavigate }) {
+function Journals({ canManage, onNavigate, initialEntryId }) {
   const [filters, setFilters] = useState({
     search: "",
     dateFrom: "",
@@ -148,7 +165,7 @@ function Journals({ canManage, onNavigate }) {
     sourceType: "",
   });
   const [manualOpen, setManualOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState(initialEntryId);
   const accounts = useQuery({
     queryKey: ["accounts"],
     queryFn: accountingApi.accounts,
@@ -443,7 +460,18 @@ function JournalDetail({ entry, open, onOpenChange, onNavigate }) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => onNavigate?.(entry.source_route)}
+              onClick={() =>
+                openDocument(onNavigate, {
+                  route: entry.source_route,
+                  id: entry.source_document_id,
+                  kind:
+                    entry.source_route === "accounting"
+                      ? "supplier-payment"
+                      : entry.source_route === "purchases"
+                        ? "purchase-order"
+                        : "invoice",
+                })
+              }
             >
               Open source document <ChevronRight />
             </Button>

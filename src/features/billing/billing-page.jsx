@@ -35,6 +35,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/features/auth/auth-provider";
 import { hasPermission, PERMISSIONS } from "@/shared/permissions/permissions";
+import {
+  consumeDocumentTarget,
+  openDocument,
+} from "@/shared/navigation/document-target";
 import { billingApi } from "./api";
 
 const PAGE_SIZE = 12;
@@ -72,6 +76,14 @@ export function BillingPage({ onNavigate }) {
   const [creating, setCreating] = useState(false);
   const [paying, setPaying] = useState(null);
   const [reason, setReason] = useState(null);
+  useEffect(() => {
+    const target = consumeDocumentTarget("billing");
+    if (!target?.id) return;
+    billingApi
+      .get(target.id)
+      .then(setDetail)
+      .catch((error) => toast.error(error.message));
+  }, []);
   const filters = { page, size: PAGE_SIZE, search: deferred, status, overdue };
   const query = useQuery({
     queryKey: ["invoices", filters],
@@ -803,7 +815,16 @@ function InvoiceDetail({
             {timeline.data?.map((event, index) => (
               <button
                 key={event.key}
-                onClick={() => event.route && onNavigate?.(event.route)}
+                onClick={() =>
+                  event.route &&
+                  openDocument(onNavigate, {
+                    route: event.route,
+                    id: event.document_id,
+                    kind: event.key?.includes("journal")
+                      ? "journal"
+                      : "invoice",
+                  })
+                }
               >
                 <span className="timeline-dot">{index + 1}</span>
                 <span>
