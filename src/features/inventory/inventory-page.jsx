@@ -87,7 +87,6 @@ export function InventoryPage() {
     <section className="inventory-hero">
       <div><p className="eyebrow-text">Inventory control</p><h1>Stock operations</h1><p>One reliable view of every product quantity across your warehouse network.</p></div>
       <div className="inventory-hero-actions">{canAdjust && <Button className="inventory-adjust-button" size="lg" variant="outline" onClick={() => setAdjustment({ open: true, stock: null })}><SlidersHorizontal />Adjust stock</Button>}{canTransfer && <Button size="lg" onClick={() => setTransferOpen(true)}><ArrowLeftRight />Transfer stock</Button>}</div>
-      <div className="inventory-hero-mark"><Boxes /></div>
     </section>
 
     <section className="inventory-summary-grid">

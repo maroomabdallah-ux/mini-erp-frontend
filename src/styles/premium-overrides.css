@@ -1,0 +1,419 @@
+/* Final theme layer. Kept separate so light, dark, and RTL rules win consistently. */
+:root {
+  --background: #faf9ff;
+  --foreground: #38334d;
+  --card: #ffffff;
+  --card-foreground: #38334d;
+  --popover: #ffffff;
+  --popover-foreground: #38334d;
+  --primary: #786bd6;
+  --primary-foreground: #ffffff;
+  --secondary: #f0edff;
+  --secondary-foreground: #50469a;
+  --muted: #f5f3fc;
+  --muted-foreground: #7d7890;
+  --border: #e7e3f2;
+  --input: #ddd8ec;
+  --ring: #a99cf1;
+}
+
+body, .app-shell, .content-area { background: #f7f5fc; }
+.main-content { background: radial-gradient(circle at 92% 0, rgba(222,216,255,.3), transparent 24%), #f7f5fc; }
+.sidebar { color: #635d78; background: linear-gradient(180deg, #fbfaff, #f1eefb); border-color: #e3deef; box-shadow: 12px 0 36px rgba(74,60,132,.07); }
+.sidebar-head { border-color: #e7e2f1; }
+.sidebar-head strong { color: #3d3752; }
+.sidebar-head span, .sidebar-foot p { color: #8e88a0; }
+.sidebar-foot { border-color: #e3deef; }
+.sidebar nav button { color: #716b84; }
+.sidebar nav button:hover:not(:disabled) { color: #504793; background: #ece8fb; border-color: #e0daf5; }
+.sidebar nav button.active { color: #50459e; background: linear-gradient(105deg, #e4dfff, #eeeaff); border-color: #d2caf5; box-shadow: 0 7px 20px rgba(114,97,206,.12), inset 0 1px #fff; }
+.sidebar nav button.active i { background: #8173db; }
+.topbar { background: rgba(252,251,255,.9); border-color: #e8e4f1; }
+.role-topbar-visual { display: flex; align-items: center; gap: 12px; min-width: 245px; height: 58px; overflow: hidden; padding: 5px 15px 5px 5px; background: linear-gradient(100deg, #f2efff, #faf9ff); border: 1px solid #e1dcf1; border-radius: 14px; box-shadow: 0 6px 18px rgba(74,59,137,.06); }
+.role-topbar-image { width: 78px; height: 48px; flex: 0 0 auto; background-image: linear-gradient(90deg, transparent 55%, rgba(247,245,252,.7)), url('/role-heroes/role-technology-grid.png'); background-repeat: no-repeat; background-size: 300% 200%; border-radius: 10px; animation: roleVisualFloat 7s ease-in-out infinite; }
+.role-topbar-visual > span { display: grid; min-width: 0; gap: 3px; }
+.role-topbar-visual small { display: flex; align-items: center; gap: 5px; color: #7569c6; font-size: .52rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.role-topbar-visual small svg { width: 11px; }
+.role-topbar-visual strong { overflow: hidden; color: #3e3852; font-size: .76rem; text-overflow: ellipsis; white-space: nowrap; }
+.role-admin .role-topbar-image, .role-administrator .role-topbar-image { background-position: 0 0; }
+.role-purchasing_officer .role-topbar-image { background-position: 50% 0; }
+.role-sales_officer .role-topbar-image { background-position: 100% 0; }
+.role-warehouse_keeper .role-topbar-image { background-position: 0 100%; }
+.role-accountant .role-topbar-image { background-position: 50% 100%; }
+.role-manager .role-topbar-image { background-position: 100% 100%; }
+@keyframes roleVisualFloat { 0%, 100% { transform: scale(1); filter: saturate(.9); } 50% { transform: scale(1.045); filter: saturate(1.08); } }
+.role-topbar-visual { display: none; }
+.admin-overview-hero, .role-dashboard-hero { position: relative; isolation: isolate; overflow: hidden; }
+.role-overview-image { position: absolute !important; z-index: 0 !important; inset: 0 0 0 auto; width: 48%; height: 100%; pointer-events: none; background-image: linear-gradient(90deg, #dcd5ff 0%, rgba(220,213,255,.78) 15%, rgba(220,213,255,.08) 55%), url('/role-heroes/role-technology-grid.png'); background-repeat: no-repeat; background-size: 300% 200%; opacity: .82; transform-origin: center; animation: roleHeroDrift 12s ease-in-out infinite; }
+.admin-hero-copy, .admin-hero-side, .role-dashboard-hero > div:not(.role-overview-image), .role-dashboard-hero > span { position: relative; z-index: 2; }
+.role-dashboard-hero > div:not(.role-overview-image) { max-width: 58%; }
+.role-dashboard-hero .dashboard-hero-icon { display: none; }
+.role-admin .role-overview-image, .role-administrator .role-overview-image { background-position: 0 0; }
+.role-purchasing_officer .role-overview-image { background-position: 50% 0; }
+.role-sales_officer .role-overview-image { background-position: 100% 0; }
+.role-warehouse_keeper .role-overview-image { background-position: 0 100%; }
+.role-accountant .role-overview-image { background-position: 50% 100%; }
+.role-manager .role-overview-image { background-position: 100% 100%; }
+@keyframes roleHeroDrift { 0%, 100% { transform: scale(1.02) translateX(0); } 50% { transform: scale(1.08) translateX(-1.2%); } }
+.admin-overview-hero, .dashboard-hero {
+  color: #352e59;
+  background: radial-gradient(circle at 82% 12%, rgba(255,255,255,.46), transparent 30%), linear-gradient(125deg, #dcd5ff, #bfb4f6 55%, #9f91e8);
+  border-color: rgba(118,101,204,.17);
+  box-shadow: 0 20px 48px rgba(99,82,180,.15);
+}
+.admin-overview-hero h1, .dashboard-hero h1 { color: #352e59; }
+.admin-overview-hero p, .dashboard-hero p:last-child { color: #625b7c; }
+.admin-command-label, .dashboard-hero .eyebrow-text { color: #5f52af; }
+.admin-system-status { color: #514a69; }
+.admin-system-status small { color: #746d89; border-color: rgba(76,64,139,.18); }
+.admin-hero-pulse { color: #403765; background: rgba(255,255,255,.48); border-color: rgba(255,255,255,.56); box-shadow: inset 0 1px rgba(255,255,255,.65); }
+.admin-hero-pulse > span, .admin-hero-pulse > small, .security-checks span { color: #645d7e; }
+.security-checks svg { color: #675ab9; }
+.admin-hero-actions button:last-child { color: #504793; background: rgba(255,255,255,.38); border-color: rgba(85,70,160,.25); }
+.data-card, .stat-card, .role-card, .account-card, .settings-card,
+.inventory-panel, .warehouse-toolbar, .admin-metric, .admin-activity-panel,
+.admin-quick-panel, .admin-role-directory, .admin-tracking-panel {
+  background: rgba(255,255,255,.94);
+  border-color: #e7e3f2;
+  box-shadow: 0 9px 28px rgba(76,61,137,.045);
+}
+.admin-overview-metrics .admin-metric:nth-child(-n+2) { background: linear-gradient(145deg, #fff, #faf9ff); border-color: #e4dff2; }
+.admin-metric > span, .admin-role-row-icon, .admin-activity-panel article > span, .admin-quick-action > span { color: #7163ca; background: #f0edff; }
+.admin-report-link { background: linear-gradient(115deg, #fbfaff, #f1eeff); }
+.public-value-strip { background: linear-gradient(90deg, #514a73, #7065a6, #514a73); }
+
+/* One visual language for every internal module header. */
+.page-heading,
+.supplier-hero, .warehouse-hero, .inventory-hero, .quotation-hero,
+.purchase-hero, .sales-hero, .billing-hero, .accounting-hero, .reports-hero,
+.customer-hero {
+  position: relative;
+  min-height: 150px;
+  overflow: hidden;
+  padding: 27px 30px;
+  color: #f7f5ff;
+  background: radial-gradient(circle at 88% 12%, rgba(192,181,245,.2), transparent 27%), linear-gradient(125deg, #4d466c, #655b91 58%, #786caa);
+  border: 1px solid rgba(220,213,250,.18);
+  border-radius: 20px;
+  box-shadow: 0 16px 38px rgba(73,60,130,.14);
+}
+.page-heading::after,
+.supplier-hero::before, .warehouse-hero::before, .inventory-hero::before,
+.quotation-hero::before, .purchase-hero::before, .sales-hero::before,
+.billing-hero::before, .accounting-hero::before, .reports-hero::before,
+.customer-hero::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: .16;
+  background-image: linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: linear-gradient(90deg, transparent, black);
+}
+.page-heading > *, .supplier-hero > *, .warehouse-hero > *, .inventory-hero > *,
+.quotation-hero > *, .purchase-hero > *, .sales-hero > *, .billing-hero > *,
+.accounting-hero > *, .reports-hero > *, .customer-hero > * { position: relative; z-index: 2; }
+.page-heading h1,
+.supplier-hero h1, .warehouse-hero h1, .inventory-hero h1,
+.quotation-hero h1, .purchase-hero h1, .sales-hero h1,
+.billing-hero h1, .accounting-hero h1, .reports-hero h1,
+.customer-hero h1 { color: #fff; }
+.page-heading p:last-child,
+.supplier-hero p, .supplier-hero span, .warehouse-hero p:last-child,
+.inventory-hero p:last-child, .quotation-hero span, .purchase-hero span,
+.sales-hero span, .billing-hero > div > span, .accounting-hero p,
+.accounting-hero span, .reports-hero span, .customer-hero span {
+  color: #ddd8ee;
+}
+.page-heading .eyebrow-text,
+.supplier-hero .eyebrow-text, .warehouse-hero .eyebrow-text,
+.inventory-hero .eyebrow-text, .quotation-hero p, .purchase-hero p,
+.sales-hero p, .billing-hero p, .reports-hero p, .customer-hero p {
+  color: #cfc7fa;
+}
+.page-heading [data-slot="button"], .supplier-hero > button,
+.purchase-hero > button, .quotation-hero > button, .sales-hero > button,
+.customer-hero > button, .billing-hero-actions [data-slot="button"] {
+  color: #4e4671;
+  background: #fff;
+  border-color: rgba(255,255,255,.55);
+  box-shadow: 0 8px 20px rgba(35,27,74,.14);
+}
+.page-heading button.bg-background,
+.supplier-hero button.bg-background, .warehouse-hero button.bg-background,
+.inventory-hero button.bg-background, .quotation-hero button.bg-background,
+.purchase-hero button.bg-background, .sales-hero button.bg-background,
+.billing-hero button.bg-background, .accounting-hero button.bg-background,
+.reports-hero button.bg-background, .customer-hero button.bg-background {
+  color: #4d447b !important;
+  background: #fff !important;
+  border-color: rgba(255,255,255,.7) !important;
+}
+.page-heading button.bg-background svg,
+.supplier-hero button.bg-background svg, .warehouse-hero button.bg-background svg,
+.inventory-hero button.bg-background svg, .quotation-hero button.bg-background svg,
+.purchase-hero button.bg-background svg, .sales-hero button.bg-background svg,
+.billing-hero button.bg-background svg, .accounting-hero button.bg-background svg,
+.reports-hero button.bg-background svg, .customer-hero button.bg-background svg { color: #675abd !important; }
+.page-heading button.bg-background:disabled,
+.billing-hero button.bg-background:disabled { color: #756d97 !important; opacity: .72; }
+.supplier-hero::after, .purchase-hero::after { opacity: .2; }
+.warehouse-hero-icon, .inventory-hero-mark, .customer-hero-art,
+.supplier-hero-icon, .billing-hero-total, .purchase-hero-flow {
+  color: #f5f2ff;
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.18);
+  backdrop-filter: blur(9px);
+}
+.accounting-hero, .reports-hero { color: #f7f5ff; background: radial-gradient(circle at 88% 12%, rgba(192,181,245,.2), transparent 27%), linear-gradient(125deg, #4d466c, #655b91 58%, #786caa); box-shadow: 0 16px 38px rgba(73,60,130,.14); }
+.accounting-hero p, .accounting-hero h1, .accounting-hero span,
+.reports-hero h1 { color: #fff; }
+.reports-hero p { color: #cfc7fa; }
+.reports-hero span { color: #ddd8ee; }
+.reports-tabs button.active, .profit-summary .highlight { color: #fff; background: #786bd6; }
+.report-kpis article > span { color: #6d5fc4; background: #f0edff; }
+.report-total strong, .admin-report-link p { color: #685bbb; }
+.sales-chart i { background: linear-gradient(#9f91e8, #6f61c6); }
+.admin-report-link { border-color: #ddd6f4; background: linear-gradient(120deg, #f5f2ff, #fff); }
+.accounting-dashboard .tone-cash { background: linear-gradient(135deg, #8b7de3, #a99cf1); }
+.accounting-dashboard .tone-bank { background: linear-gradient(135deg, #6d65c8, #8d83e2); }
+.accounting-dashboard .tone-receivable { background: linear-gradient(135deg, #9b75cf, #b794e0); }
+.accounting-dashboard .tone-payable { background: linear-gradient(135deg, #7567bd, #9487dc); }
+.accounting-dashboard .tone-inventory { background: linear-gradient(135deg, #8273d0, #a395e9); }
+.accounting-dashboard .tone-profit { background: linear-gradient(135deg, #6658af, #8879d2); }
+
+/* Modern technical sign-in experience. */
+.login-page {
+  position: relative;
+  grid-template-columns: minmax(0, 1.08fr) minmax(430px, .72fr);
+  gap: 18px;
+  min-height: 100vh;
+  padding: clamp(18px, 3vw, 44px);
+  overflow: hidden;
+  background: radial-gradient(circle at 12% 12%, rgba(203,194,255,.48), transparent 27%), radial-gradient(circle at 88% 85%, rgba(224,219,255,.55), transparent 25%), #f7f5fc;
+}
+.login-page::before { position: absolute; inset: 0; pointer-events: none; content: ""; opacity: .42; background-image: linear-gradient(rgba(102,87,177,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(102,87,177,.045) 1px, transparent 1px); background-size: 48px 48px; }
+.login-brand {
+  min-height: calc(100vh - clamp(36px, 6vw, 88px));
+  padding: clamp(34px, 5vw, 72px);
+  color: #373153;
+  background: radial-gradient(circle at 80% 16%, rgba(255,255,255,.65), transparent 28%), linear-gradient(145deg, #eeeaff, #d9d2ff 58%, #c1b6f6);
+  border: 1px solid rgba(113,94,201,.18);
+  border-radius: 30px;
+  box-shadow: 0 28px 70px rgba(78,62,151,.16);
+}
+.login-brand::after { position: absolute; right: 7%; bottom: 8%; width: 210px; height: 210px; content: ""; border: 1px solid rgba(89,72,172,.13); border-radius: 50%; box-shadow: 0 0 0 36px rgba(255,255,255,.09), 0 0 0 72px rgba(255,255,255,.06); }
+.login-brand .brand-signature { position: relative; z-index: 2; }
+.login-brand .mini-erp-logo-full { width: 88px; height: 88px; border-radius: 22px; box-shadow: 0 16px 38px rgba(70,54,143,.16); }
+.login-brand-copy { position: relative; z-index: 2; max-width: 760px; margin-top: auto; }
+.login-brand .eyebrow { color: #6155ae; font-size: .7rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.login-brand h1 { max-width: 760px; margin: 25px 0 20px; color: #352f54; font-size: clamp(3.2rem, 5vw, 6rem); line-height: .98; letter-spacing: -.068em; }
+.login-brand p { max-width: 660px; color: #67607e; font-size: 1rem; line-height: 1.8; }
+.login-system-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; max-width: 680px; margin-top: 35px; }
+.login-system-grid > span { display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 2px 9px; padding: 13px 14px; background: rgba(255,255,255,.42); border: 1px solid rgba(255,255,255,.62); border-radius: 13px; backdrop-filter: blur(10px); }
+.login-system-grid svg { grid-row: 1 / 3; width: 18px; color: #685cbb; }
+.login-system-grid b { color: #443c72; font-size: .68rem; }
+.login-system-grid small { color: #756e8d; font-size: .55rem; }
+.login-orb { right: -120px; left: auto; top: -120px; width: 430px; height: 430px; background: radial-gradient(circle, rgba(255,255,255,.38), transparent 66%); border-color: rgba(255,255,255,.28); }
+.login-form-wrap { position: relative; z-index: 2; min-height: calc(100vh - clamp(36px, 6vw, 88px)); padding: clamp(30px, 5vw, 72px); background: rgba(255,255,255,.88); border: 1px solid #e5e0f1; border-radius: 30px; box-shadow: 0 28px 70px rgba(70,54,143,.1); backdrop-filter: blur(18px); }
+.login-card { gap: 23px; width: min(100%, 445px); }
+.login-card h2 { color: #342f49; font-size: 2.25rem; }
+.login-card .muted-copy { color: #7e788e; }
+.login-card .form-field { gap: 9px; }
+.login-card label { color: #4b455d; font-size: .73rem; font-weight: 720; }
+.login-card input { height: 49px; color: #3c364d; background: #faf9ff; border-color: #ddd7ec; border-radius: 12px; }
+.login-card input:focus { border-color: #9d90e5; box-shadow: 0 0 0 4px rgba(120,107,214,.1); }
+.login-card > [data-slot="button"] { height: 51px; border-radius: 12px; box-shadow: 0 12px 26px rgba(103,87,198,.23); }
+.login-back { color: #756e88; font-size: .7rem; }
+.login-help { display: flex; align-items: center; justify-content: center; gap: 7px; color: #918a9f; }
+.login-help svg { width: 14px; }
+
+/* Complete dark theme for every premium surface. */
+.dark {
+  --background: #181622;
+  --foreground: #eeebf8;
+  --card: #242131;
+  --card-foreground: #eeebf8;
+  --popover: #292538;
+  --popover-foreground: #f4f1fb;
+  --primary: #a99cf1;
+  --primary-foreground: #211d31;
+  --secondary: #342f49;
+  --secondary-foreground: #e8e3ff;
+  --muted: #2d293c;
+  --muted-foreground: #ada7bf;
+  --border: #413b55;
+  --input: #4a445f;
+  --ring: #a99cf1;
+}
+.dark body, .dark .app-shell, .dark .content-area, .dark .main-content { color: #eeebf8; background: #181622; }
+.dark .main-content { background: radial-gradient(circle at 90% 0, rgba(104,87,180,.15), transparent 24%), #181622; }
+.dark .sidebar { color: #bdb6d1; background: linear-gradient(180deg, #252133, #1d1a29); border-color: #383247; box-shadow: 12px 0 38px rgba(0,0,0,.2); }
+.dark .sidebar-head, .dark .sidebar-foot { border-color: #39334a; }
+.dark .sidebar-head strong { color: #f5f1ff; }
+.dark .sidebar-head span, .dark .sidebar-foot p { color: #928ba7; }
+.dark .sidebar nav button { color: #aaa3bd; }
+.dark .sidebar nav button:hover:not(:disabled) { color: #f4f0ff; background: #302b42; border-color: #403950; }
+.dark .sidebar nav button.active { color: #fff; background: linear-gradient(105deg, #6254bd, #7768d2); border-color: #8173dc; box-shadow: 0 9px 25px rgba(32,23,75,.35); }
+.dark .topbar { background: rgba(31,28,42,.9); border-color: #3a3549; }
+.dark .role-topbar-visual { background: linear-gradient(100deg, #302b42, #272334); border-color: #443d57; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.dark .role-topbar-image { background-image: linear-gradient(90deg, transparent 48%, rgba(39,35,52,.76)), url('/role-heroes/role-technology-grid.png'); }
+.dark .role-topbar-visual small { color: #bdb2ff; }
+.dark .role-topbar-visual strong { color: #eeeaf7; }
+.dark .role-overview-image { background-image: linear-gradient(90deg, #29243d 0%, rgba(41,36,61,.78) 18%, rgba(41,36,61,.13) 58%), url('/role-heroes/role-technology-grid.png'); opacity: .68; filter: brightness(.72) saturate(.82); }
+.dark .profile-trigger:hover { background: #302c40; border-color: #443d57; }
+.dark .profile-trigger strong, .dark .page-heading h1 { color: #f0edf8; }
+.dark .profile-trigger span, .dark .page-heading p:last-child { color: #aaa4b9; }
+.dark .admin-overview-hero, .dark .dashboard-hero { color: #f2efff; background: radial-gradient(circle at 82% 12%, rgba(155,139,232,.17), transparent 29%), linear-gradient(125deg, #29243d, #403768 58%, #574b91); border-color: #554a77; box-shadow: 0 20px 48px rgba(0,0,0,.25); }
+.dark .admin-overview-hero h1, .dark .dashboard-hero h1 { color: #f5f2ff; }
+.dark .admin-overview-hero p, .dark .dashboard-hero p:last-child, .dark .admin-system-status { color: #c6bfd7; }
+.dark .admin-command-label, .dark .dashboard-hero .eyebrow-text { color: #cfc6ff; }
+.dark .admin-system-status small { color: #9f98b3; border-color: #5d5473; }
+.dark .admin-hero-pulse { color: #f1edff; background: rgba(24,20,39,.3); border-color: rgba(208,198,255,.18); }
+.dark .admin-hero-pulse > span, .dark .admin-hero-pulse > small, .dark .security-checks span { color: #c9c2dc; }
+.dark .security-checks svg { color: #beb3ff; }
+.dark .admin-hero-actions button:first-child { color: #342b5e; background: #f1eeff; }
+.dark .admin-hero-actions button:last-child { color: #eeeaff; background: rgba(255,255,255,.07); border-color: rgba(222,214,255,.24); }
+.dark .data-card, .dark .stat-card, .dark .role-card, .dark .account-card,
+.dark .settings-card, .dark .inventory-panel, .dark .warehouse-toolbar,
+.dark .admin-overview-metrics .admin-metric, .dark .admin-activity-panel,
+.dark .admin-quick-panel, .dark .admin-role-directory, .dark .admin-tracking-panel {
+  color: #ece8f6; background: #242131; border-color: #403a52; box-shadow: 0 10px 30px rgba(0,0,0,.14);
+}
+.dark .admin-overview-metrics .admin-metric:nth-child(-n+2) { background: linear-gradient(145deg, #292538, #242131); border-color: #48415d; }
+.dark .admin-metric strong, .dark .admin-activity-panel h2, .dark .admin-quick-panel h2,
+.dark .admin-role-directory h2, .dark .admin-role-row-main p, .dark .admin-activity-panel article strong,
+.dark .admin-quick-action strong { color: #f0edf8; }
+.dark .admin-metric p, .dark .admin-metric small, .dark .admin-role-row-main span,
+.dark .admin-activity-panel article small, .dark .admin-activity-panel time,
+.dark .admin-quick-action small { color: #aaa4b9; }
+.dark .admin-metric > span, .dark .admin-role-row-icon, .dark .admin-activity-panel article > span,
+.dark .admin-quick-action > span { color: #c9c0ff; background: #373149; }
+.dark .admin-activity-panel > header, .dark .admin-quick-panel > header,
+.dark .admin-role-directory > header, .dark .table-toolbar, .dark .table-pagination { background: #292537; border-color: #403a52; }
+.dark .admin-activity-panel article, .dark .admin-role-row, .dark td { border-color: #3a3549; }
+.dark .admin-quick-action:hover, .dark .admin-role-row:hover, .dark tbody tr:hover { background: #2e293e; }
+.dark .admin-role-row-tasks span { color: #c1bad1; background: #302c40; border-color: #433d55; }
+.dark input:not([type="checkbox"]):not([type="radio"]), .dark textarea, .dark select,
+.dark .form-select, .dark .search-box input { color: #ece8f6; background: #201d2b; border-color: #49425d; }
+.dark input::placeholder, .dark textarea::placeholder { color: #837d93; }
+.dark th { color: #aaa4b9; background: #292537; border-color: #403a52; }
+.dark td { color: #dcd7e8; background: transparent; }
+.dark [role="dialog"] { color: #eeeaf7; background: #242131; border-color: #49425e; }
+.dark .catalog-tabs { background: #302c40; }
+.dark .catalog-tabs button.active { color: #eeeaff; background: #45405a; }
+.dark .page-heading,
+.dark .supplier-hero, .dark .warehouse-hero, .dark .inventory-hero,
+.dark .quotation-hero, .dark .purchase-hero, .dark .sales-hero,
+.dark .billing-hero, .dark .accounting-hero, .dark .reports-hero,
+.dark .customer-hero {
+  color: #f5f2ff;
+  background: radial-gradient(circle at 88% 12%, rgba(133,116,210,.15), transparent 28%), linear-gradient(125deg, #252233, #332e48 58%, #40385c);
+  border-color: #4a435f;
+  box-shadow: 0 16px 38px rgba(0,0,0,.22);
+}
+.dark .page-heading h1, .dark .supplier-hero h1, .dark .warehouse-hero h1,
+.dark .inventory-hero h1, .dark .quotation-hero h1, .dark .purchase-hero h1,
+.dark .sales-hero h1, .dark .billing-hero h1, .dark .accounting-hero h1,
+.dark .reports-hero h1, .dark .customer-hero h1 { color: #f7f4ff; }
+.dark .accounting-hero, .dark .reports-hero { color: #f1edff; background: radial-gradient(circle at 82% 12%, rgba(161,145,235,.16), transparent 30%), linear-gradient(125deg, #29243d, #403768 58%, #574b91); box-shadow: 0 18px 40px rgba(0,0,0,.24); }
+.dark .accounting-hero p, .dark .accounting-hero h1, .dark .accounting-hero span,
+.dark .reports-hero h1 { color: #f2efff; }
+.dark .reports-hero p { color: #c9c0ff; }
+.dark .reports-hero span { color: #c2bbd2; }
+.dark .report-kpis article, .dark .report-panel { color: #ece8f6; background: #242131; border-color: #403a52; }
+.dark .report-kpis article > span { color: #c8beff; background: #373149; }
+.dark .admin-report-link { border-color: #49425e; background: linear-gradient(120deg, #2d293c, #242131); }
+.dark .public-site { color: #eeebf8; background: #181622; }
+.dark .public-header { background: rgba(28,25,39,.9); border-color: #3c364e; }
+.dark .public-logo strong, .dark .public-header nav button.active { color: #f0edf8; }
+.dark .public-logo small, .dark .public-header nav button { color: #aaa4b9; }
+.dark .public-header nav button:hover, .dark .public-header nav button.active { background: #302b42 !important; }
+.dark .public-hero { background: radial-gradient(circle at 79% 26%, rgba(113,94,202,.2), transparent 29%), linear-gradient(145deg, #1b1826, #211d31); }
+.dark .public-hero h1, .dark .public-section-heading h2, .dark .public-about > h1 { color: #f1eef9; }
+.dark .public-hero h1 em, .dark .public-kicker, .dark .public-section-heading > span { color: #b8adf7; }
+.dark .public-hero > .public-hero-copy > p, .dark .public-proof, .dark .public-section-heading p,
+.dark .public-about-lead, .dark .public-module-grid p, .dark .public-about-grid p { color: #aaa4b9; }
+.dark .public-text-link { color: #d8d1ff; }
+.dark .product-window { background: #242131; border-color: #49425e; box-shadow: 0 42px 90px rgba(0,0,0,.35); }
+.dark .product-window-bar, .dark .preview-heading > span { color: #aaa4b9; background: #2d293c; border-color: #413b55; }
+.dark .preview-main, .dark .preview-stats article, .dark .preview-chart, .dark .preview-activity { color: #eeeaf7; background: #242131; border-color: #403a52; }
+.dark .public-section, .dark .public-about { background: #1b1826; }
+.dark .public-module-grid article, .dark .public-about-grid article { color: #eeeaf7; background: #242131; border-color: #403a52; }
+.dark .public-module-grid article:hover { border-color: #655a83; box-shadow: 0 20px 45px rgba(0,0,0,.2); }
+.dark .public-footer { background: #15131d; }
+.dark .login-page, .dark .login-form-wrap { color: #eeebf8; background: #181622; }
+.dark .login-card input { color: #ece8f6; background: #201d2b; border-color: #49425d; }
+.dark .login-page { background: radial-gradient(circle at 12% 12%, rgba(104,87,180,.16), transparent 28%), #15131d; }
+.dark .login-brand { color: #f0ecff; background: radial-gradient(circle at 80% 16%, rgba(151,136,226,.13), transparent 28%), linear-gradient(145deg, #29243d, #39315b 58%, #4e4380); border-color: #544a72; box-shadow: 0 28px 70px rgba(0,0,0,.25); }
+.dark .login-brand h1 { color: #f3efff; }
+.dark .login-brand p, .dark .login-system-grid small { color: #c3bcd4; }
+.dark .login-brand .eyebrow { color: #cfc6ff; }
+.dark .login-system-grid > span { background: rgba(20,17,31,.24); border-color: rgba(219,211,255,.14); }
+.dark .login-system-grid b { color: #eee9ff; }
+.dark .login-system-grid svg { color: #c1b6ff; }
+.dark .login-form-wrap { background: rgba(31,28,43,.92); border-color: #413a55; box-shadow: 0 28px 70px rgba(0,0,0,.24); }
+.dark .login-card h2, .dark .login-card label { color: #f0edf8; }
+
+@media (max-width: 980px) {
+  .login-page { grid-template-columns: 1fr; padding: 14px; }
+  .login-brand { min-height: 420px; padding: 35px; border-radius: 24px; }
+  .login-brand h1 { font-size: clamp(2.8rem, 9vw, 4.6rem); }
+  .login-form-wrap { min-height: auto; padding: 55px 28px; border-radius: 24px; }
+}
+@media (max-width: 600px) {
+  .login-brand { min-height: 380px; }
+  .login-brand .mini-erp-logo-full { width: 65px; height: 65px; }
+  .login-brand h1 { font-size: 2.65rem; }
+  .login-system-grid { grid-template-columns: 1fr; }
+  .login-system-grid > span:nth-child(n+2) { display: none; }
+}
+
+@media (max-width: 700px) {
+  .page-heading, .supplier-hero, .warehouse-hero, .inventory-hero,
+  .quotation-hero, .purchase-hero, .sales-hero, .billing-hero,
+  .accounting-hero, .reports-hero, .customer-hero {
+    min-height: 132px;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 22px 20px;
+    border-radius: 17px;
+  }
+  .warehouse-hero-icon, .inventory-hero-mark, .customer-hero-art,
+  .supplier-hero-icon, .billing-hero-total, .purchase-hero-flow { display: none; }
+}
+
+/* RTL shell geometry and table containment. */
+[dir="rtl"] .app-shell { direction: rtl; }
+[dir="rtl"] .sidebar { right: 0; left: auto; border-right: 0; border-left: 1px solid #e3deef; }
+.dark[dir="rtl"] .sidebar { border-left-color: #383247; }
+[dir="rtl"] .profile-trigger > div:nth-child(2), [dir="rtl"] .page-heading,
+[dir="rtl"] .table-toolbar, [dir="rtl"] .admin-role-row-main { text-align: right; }
+[dir="rtl"] .table-scroll { width: 100%; max-width: 100%; direction: ltr; overflow-x: auto; }
+[dir="rtl"] .table-scroll table { min-width: 100%; direction: rtl; }
+[dir="rtl"] th { text-align: right; }
+[dir="rtl"] .search-box > svg { right: 13px; left: auto; }
+[dir="rtl"] .search-box input { padding-right: 39px; padding-left: 12px; }
+[dir="rtl"] .sidebar nav button:hover:not(:disabled) { transform: translateX(-2px); }
+[dir="rtl"] .sidebar nav button.active i { right: auto; left: 7px; }
+[dir="rtl"] .admin-quick-action { text-align: right; }
+[dir="rtl"] .admin-quick-action > svg { transform: rotate(180deg); }
+
+@media (min-width: 1181px) {
+  [dir="rtl"] .sidebar { transform: translateX(0) !important; }
+  [dir="rtl"] .content-area { width: calc(100% - 264px) !important; margin-right: 264px !important; margin-left: 0 !important; }
+}
+@media (max-width: 1180px) {
+  [dir="rtl"] .sidebar { transform: translateX(105%) !important; }
+  [dir="rtl"] .sidebar.open { transform: translateX(0) !important; }
+  [dir="rtl"] .content-area { width: 100% !important; margin-right: 0 !important; margin-left: 0 !important; }
+}
+@media (max-width: 720px) {
+  .role-topbar-visual { min-width: 0; width: 54px; padding: 4px; border-radius: 12px; }
+  .role-topbar-image { width: 44px; height: 44px; }
+  .role-topbar-visual > span { display: none; }
+  .role-overview-image { inset: auto 0 0; width: 100%; height: 46%; background-image: linear-gradient(180deg, #dcd5ff 0%, rgba(220,213,255,.1) 65%), url('/role-heroes/role-technology-grid.png'); opacity: .42; }
+  .role-dashboard-hero > div:not(.role-overview-image) { max-width: 100%; }
+  .dark .role-overview-image { background-image: linear-gradient(180deg, #29243d 0%, rgba(41,36,61,.12) 70%), url('/role-heroes/role-technology-grid.png'); }
+}

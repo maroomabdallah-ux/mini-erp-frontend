@@ -143,15 +143,39 @@ function Range({ value, onChange }) {
 
 function Profit() {
   const [range, setRange] = useState({ from: monthStart(), to: today() });
+  const [categoryId, setCategoryId] = useState("");
+  const categories = useQuery({
+    queryKey: ["report-categories"],
+    queryFn: () => productsApi.categories(),
+  });
   const query = useQuery({
-    queryKey: ["profit-report", range],
-    queryFn: () => reportsApi.profit(range.from, range.to),
+    queryKey: ["profit-report", range, categoryId],
+    queryFn: () => reportsApi.profit(range.from, range.to, categoryId),
   });
   return (
     <ReportPanel
       title="Profit report"
       subtitle="Net invoiced revenue less cost of goods sold."
-      controls={<Range value={range} onChange={setRange} />}
+      controls={
+        <div className="report-range">
+          <Range value={range} onChange={setRange} />
+          <label>
+            Category
+            <select
+              className="form-select"
+              value={categoryId}
+              onChange={(event) => setCategoryId(event.target.value)}
+            >
+              <option value="">All categories</option>
+              {categories.data?.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      }
     >
       <div className="profit-summary">
         <Metric label="Revenue" value={money(query.data?.revenue)} />
@@ -207,15 +231,31 @@ function MonthlySales() {
 
 function TopProducts() {
   const [range, setRange] = useState({ from: monthStart(), to: today() });
+  const [sortBy, setSortBy] = useState("revenue");
   const query = useQuery({
-    queryKey: ["top-products", range],
-    queryFn: () => reportsApi.topProducts(range.from, range.to),
+    queryKey: ["top-products", range, sortBy],
+    queryFn: () => reportsApi.topProducts(range.from, range.to, sortBy),
   });
   return (
     <ReportPanel
       title="Top-selling products"
-      subtitle="Products ranked by net invoiced sales."
-      controls={<Range value={range} onChange={setRange} />}
+      subtitle="Products ranked by quantity or net invoiced sales."
+      controls={
+        <div className="report-range">
+          <Range value={range} onChange={setRange} />
+          <label>
+            Rank by
+            <select
+              className="form-select"
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+            >
+              <option value="revenue">Revenue</option>
+              <option value="quantity">Quantity</option>
+            </select>
+          </label>
+        </div>
+      }
     >
       <Table
         headers={["Product", "SKU", "Quantity", "Net sales"]}
@@ -238,7 +278,7 @@ function Valuation() {
   return (
     <ReportPanel
       title="Inventory valuation"
-      subtitle="Current on-hand stock valued at product cost."
+      subtitle="Current on-hand stock valued at product cost for each warehouse."
     >
       <div className="report-total">
         <span>Total inventory value</span>
@@ -246,8 +286,16 @@ function Valuation() {
         <small>{query.data?.total_quantity || 0} units on hand</small>
       </div>
       <Table
-        headers={["Product", "SKU", "Quantity", "Unit cost", "Value"]}
+        headers={[
+          "Warehouse",
+          "Product",
+          "SKU",
+          "Quantity",
+          "Unit cost",
+          "Value",
+        ]}
         rows={query.data?.items.map((row) => [
+          row.warehouse_name,
           row.product_name,
           row.sku,
           row.quantity,
@@ -285,19 +333,10 @@ function Aging() {
         <strong>{money(query.data?.total_outstanding)}</strong>
       </div>
       <Table
-        headers={[
-          "Customer",
-          "Current",
-          "1–30",
-          "31–60",
-          "61–90",
-          "Over 90",
-          "Total",
-        ]}
+        headers={["Customer", "0–30", "31–60", "61–90", "Over 90", "Total"]}
         rows={query.data?.items.map((row) => [
           row.customer_name,
-          money(row.current),
-          money(row.days_1_30),
+          money(row.days_0_30),
           money(row.days_31_60),
           money(row.days_61_90),
           money(row.over_90),

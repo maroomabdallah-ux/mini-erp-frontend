@@ -8,11 +8,13 @@ export const billingApi = {
     search = "",
     status = "",
     overdue = false,
+    customerId = "",
   }) => {
     const params = new URLSearchParams({ page, size });
     if (search.trim()) params.set("search", search.trim());
     if (status) params.set("status", status);
     if (overdue) params.set("overdue", "true");
+    if (customerId) params.set("customer_id", customerId);
     return apiRequest(`/invoices?${params}`);
   },
   eligibleOrders: () => apiRequest("/invoices/eligible-orders"),
@@ -29,6 +31,8 @@ export const billingApi = {
       method: "POST",
       body: JSON.stringify(input),
     }),
+  recordCustomerPayment: (input) =>
+    apiRequest("/payments", { method: "POST", body: JSON.stringify(input) }),
   reversePayment: (id, reason) =>
     apiRequest(`/payments/${id}/reverse`, {
       method: "POST",

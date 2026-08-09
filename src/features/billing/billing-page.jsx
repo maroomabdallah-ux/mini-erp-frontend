@@ -34,6 +34,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/features/auth/auth-provider";
+import { customersApi } from "@/features/customers/api";
 import { hasPermission, PERMISSIONS } from "@/shared/permissions/permissions";
 import {
   consumeDocumentTarget,
@@ -74,6 +75,7 @@ export function BillingPage({ onNavigate }) {
   const [page, setPage] = useState(1);
   const [detail, setDetail] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [receiving, setReceiving] = useState(false);
   const [paying, setPaying] = useState(null);
   const [reason, setReason] = useState(null);
   useEffect(() => {
@@ -139,12 +141,24 @@ export function BillingPage({ onNavigate }) {
             </strong>
           </span>
         </div>
-        {canCreate && (
-          <Button size="lg" onClick={() => setCreating(true)}>
-            <Plus />
-            Generate invoice
-          </Button>
-        )}
+        <div className="billing-hero-actions">
+          {canPay && (
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setReceiving(true)}
+            >
+              <Banknote />
+              Record customer receipt
+            </Button>
+          )}
+          {canCreate && (
+            <Button size="lg" onClick={() => setCreating(true)}>
+              <Plus />
+              Generate invoice
+            </Button>
+          )}
+        </div>
       </section>
       <section className="billing-metrics">
         <Metric
@@ -275,6 +289,14 @@ export function BillingPage({ onNavigate }) {
         onOpenChange={setCreating}
         onCreated={() => {
           setCreating(false);
+          refresh();
+        }}
+      />
+      <CustomerReceiptDialog
+        open={receiving}
+        onOpenChange={setReceiving}
+        onDone={() => {
+          setReceiving(false);
           refresh();
         }}
       />
@@ -421,6 +443,202 @@ function InvoiceRow({
           )}
       </div>
     </article>
+  );
+}
+
+function CustomerReceiptDialog({ open, onOpenChange, onDone }) {
+  const blank = () => ({
+    amount: "",
+    payment_date: new Date().toISOString().slice(0, 10),
+    method: "bank_transfer",
+    reference: "",
+    allocations: {},
+  });
+  const [customerId, setCustomerId] = useState("");
+  const [form, setForm] = useState(blank);
+  const customers = useQuery({
+    queryKey: ["receipt-customers"],
+    queryFn: () => customersApi.list({ page: 1, size: 100, status: "true" }),
+    enabled: open,
+  });
+  const invoices = useQuery({
+    queryKey: ["receipt-invoices", customerId],
+    queryFn: () => billingApi.list({ page: 1, size: 100, customerId }),
+    enabled: open && Boolean(customerId),
+  });
+  useEffect(() => {
+    if (open) {
+      setCustomerId("");
+      setForm(blank());
+    }
+  }, [open]);
+  const mutation = useMutation({
+    mutationFn: billingApi.recordCustomerPayment,
+    onSuccess: () => {
+      toast.success("Customer receipt posted and allocated");
+      onDone();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+  const openInvoices =
+    invoices.data?.items.filter((invoice) =>
+      ["issued", "partially_paid"].includes(invoice.status),
+    ) || [];
+  const allocated = Object.values(form.allocations).reduce(
+    (sum, value) => sum + Number(value || 0),
+    0,
+  );
+  const submit = (event) => {
+    event.preventDefault();
+    mutation.mutate({
+      customer_id: Number(customerId),
+      amount: form.amount,
+      payment_date: form.payment_date,
+      method: form.method,
+      reference: form.reference.trim() || null,
+      allocations: Object.entries(form.allocations)
+        .filter(([, amount]) => Number(amount) > 0)
+        .map(([invoice_id, amount]) => ({
+          invoice_id: Number(invoice_id),
+          amount,
+        })),
+    });
+  };
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Record customer receipt</DialogTitle>
+          <DialogDescription>
+            Allocate one receipt across multiple open invoices, or leave part of
+            it on account.
+          </DialogDescription>
+        </DialogHeader>
+        <form className="dialog-form" onSubmit={submit}>
+          <div className="billing-payment-grid">
+            <div className="form-field">
+              <Label>Customer</Label>
+              <select
+                className="form-select"
+                value={customerId}
+                onChange={(event) => {
+                  setCustomerId(event.target.value);
+                  setForm({ ...form, allocations: {} });
+                }}
+                required
+              >
+                <option value="">Select</option>
+                {customers.data?.items.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.code} — {customer.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-field">
+              <Label>Total receipt</Label>
+              <Input
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={form.amount}
+                onChange={(event) =>
+                  setForm({ ...form, amount: event.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="form-field">
+              <Label>Date</Label>
+              <Input
+                type="date"
+                value={form.payment_date}
+                onChange={(event) =>
+                  setForm({ ...form, payment_date: event.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="form-field">
+              <Label>Method</Label>
+              <select
+                className="form-select"
+                value={form.method}
+                onChange={(event) =>
+                  setForm({ ...form, method: event.target.value })
+                }
+              >
+                {["cash", "bank_transfer", "card", "cheque"].map((method) => (
+                  <option key={method}>{method}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <section className="payment-history">
+            <header>
+              <strong>Invoice allocations</strong>
+              <small>
+                {money(allocated)} allocated ·{" "}
+                {money(Number(form.amount || 0) - allocated)} unallocated
+              </small>
+            </header>
+            {openInvoices.map((invoice) => (
+              <article key={invoice.id}>
+                <div>
+                  <strong>{invoice.number}</strong>
+                  <small>Balance {money(invoice.balance_due)}</small>
+                </div>
+                <Input
+                  aria-label={`Allocate to ${invoice.number}`}
+                  type="number"
+                  min="0"
+                  max={invoice.balance_due}
+                  step="0.01"
+                  value={form.allocations[invoice.id] || ""}
+                  onChange={(event) =>
+                    setForm({
+                      ...form,
+                      allocations: {
+                        ...form.allocations,
+                        [invoice.id]: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </article>
+            ))}
+          </section>
+          <div className="form-field">
+            <Label>Reference</Label>
+            <Input
+              value={form.reference}
+              onChange={(event) =>
+                setForm({ ...form, reference: event.target.value })
+              }
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={
+                mutation.isPending ||
+                !customerId ||
+                Number(form.amount) <= 0 ||
+                allocated > Number(form.amount)
+              }
+            >
+              {mutation.isPending ? "Posting..." : "Post receipt"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -15,7 +15,9 @@ export function AppShell({ children, currentPage, onNavigate }) {
   const { user, logout } = useAuth(); const [open, setOpen] = useState(false)
   const { t } = usePreferences()
   const visibleNavigation = NAVIGATION_ITEMS.filter((item) => hasPermission(user, item.permission))
-  return <div className="app-shell">
+  const primaryRole = user.roles?.find((role) => role.is_active)?.name || 'user'
+  const roleClass = primaryRole.toLowerCase().replaceAll(' ', '_')
+  return <div className={`app-shell role-${roleClass}`}>
     {open && <button className="sidebar-overlay" onClick={() => setOpen(false)} aria-label="Close menu" />}
     <aside className={`sidebar ${open ? 'open' : ''}`}>
       <div className="sidebar-head"><div className="brand-mark small"><MiniErpLogo /></div><div><strong>Mini ERP</strong><span>{t('shell.workspace')}</span></div><button className="mobile-close" onClick={() => setOpen(false)} aria-label="Close menu"><X /></button></div>

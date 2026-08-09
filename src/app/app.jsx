@@ -4,6 +4,7 @@ import { LoginPage } from "@/features/auth/login-page";
 import { AppShell } from "@/components/layout/app-shell";
 import { PERMISSIONS, hasPermission } from "@/shared/permissions/permissions";
 import { PreferencesProvider } from "@/shared/preferences/preferences-provider";
+import { PublicSite } from "@/features/public/public-site";
 
 const page = (loader, name) =>
   lazy(() => loader().then((module) => ({ default: module[name] })));
@@ -124,13 +125,17 @@ const pages = {
 function AppContent() {
   const { user, loading } = useAuth();
   const [page, setPage] = useState("overview");
+  const [publicPage, setPublicPage] = useState("home");
   if (loading)
     return (
       <div className="grid min-h-screen place-items-center bg-muted/40">
         <div className="loader" />
       </div>
     );
-  if (!user) return <LoginPage />;
+  if (!user) {
+    if (publicPage === "login") return <LoginPage onBack={() => setPublicPage("home")} />;
+    return <PublicSite page={publicPage} onNavigate={setPublicPage} />;
+  }
   const requestedPage = pages[page] || pages.overview;
   const safePage = hasPermission(user, requestedPage.permission)
     ? page

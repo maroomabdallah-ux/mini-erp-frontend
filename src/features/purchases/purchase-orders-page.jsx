@@ -48,6 +48,8 @@ const STATUS = {
   draft: { label: "Draft", icon: FilePenLine },
   pending_approval: { label: "Pending approval", icon: Clock3 },
   approved: { label: "Approved", icon: ClipboardCheck },
+  sent: { label: "Sent", icon: Send },
+  partially_received: { label: "Partially received", icon: PackageCheck },
   rejected: { label: "Rejected", icon: XCircle },
   cancelled: { label: "Cancelled", icon: Ban },
   received: { label: "Received", icon: PackageCheck },
@@ -153,6 +155,7 @@ export function PurchaseOrdersPage() {
     mutationFn: ({ type, order, payload }) => {
       if (type === "submit") return purchasesApi.submit(order.id);
       if (type === "approve") return purchasesApi.approve(order.id);
+      if (type === "send") return purchasesApi.send(order.id);
       if (type === "reject") return purchasesApi.reject(order.id, payload);
       if (type === "cancel") return purchasesApi.cancel(order.id, payload);
       return purchasesApi.receive(order.id, payload);
@@ -161,6 +164,7 @@ export function PurchaseOrdersPage() {
       const messages = {
         submit: "Purchase order submitted for approval",
         approve: "Purchase order approved",
+        send: "Purchase order sent to supplier",
         reject: "Purchase order rejected",
         cancel: "Purchase order cancelled",
         receive: "Goods received and inventory updated",
@@ -324,6 +328,7 @@ export function PurchaseOrdersPage() {
                 onEdit={() => setEditor({ open: true, order })}
                 onSubmit={() => run("submit", order)}
                 onApprove={() => run("approve", order)}
+                onSend={() => run("send", order)}
                 onReject={() =>
                   setReasonDialog({ open: true, mode: "reject", order })
                 }
@@ -373,6 +378,7 @@ export function PurchaseOrdersPage() {
         order={editor.order}
         suppliers={suppliers}
         products={products}
+        warehouses={warehouses}
         onSave={(payload) => save.mutate(payload)}
         loading={save.isPending}
       />
@@ -426,6 +432,7 @@ function PurchaseRow({
   onEdit,
   onSubmit,
   onApprove,
+  onSend,
   onReject,
   onCancel,
   onReceive,
@@ -496,12 +503,24 @@ function PurchaseRow({
               </Button>
             </>
           )}
-        {permissions.canReceive && order.status === "approved" && (
-          <Button size="sm" disabled={loading} onClick={onReceive}>
-            <PackageCheck />
-            Receive
+        {permissions.canUpdate && order.status === "approved" && (
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={loading}
+            onClick={onSend}
+          >
+            <Send />
+            Send
           </Button>
         )}
+        {permissions.canReceive &&
+          ["approved", "sent", "partially_received"].includes(order.status) && (
+            <Button size="sm" disabled={loading} onClick={onReceive}>
+              <PackageCheck />
+              Receive
+            </Button>
+          )}
         {permissions.canCancel &&
           ["draft", "pending_approval", "approved"].includes(order.status) && (
             <Button

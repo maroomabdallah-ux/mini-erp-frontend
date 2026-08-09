@@ -310,7 +310,6 @@ export const arabicUi = {
   "Role ownership": "مسؤوليات الأدوار",
   "Who controls each operation?": "من المسؤول عن كل عملية؟",
   Open: "فتح",
-  "Next to build": "التالي للبناء",
   "Manage team": "إدارة الفريق",
   "Active users": "المستخدمون النشطون",
   "Manage permissions": "إدارة الصلاحيات",

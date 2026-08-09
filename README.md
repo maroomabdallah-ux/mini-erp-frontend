@@ -8,6 +8,16 @@ The completed scope includes authentication, role-aware dashboards, administrati
 
 The functional frontend scope is complete. The Reports workspace provides an executive overview, profit analysis, twelve-month sales trend, top products, inventory valuation, receivables aging, and a running stock ledger. Accounting includes a read-first journal register, hierarchical Chart of Accounts, source-document navigation, supplier balances and payment reversal, bank-style statements, and invoice accounting timelines.
 
+The frontend now includes a TypeScript entry point and TypeScript project validation, route-level code splitting, CI build/typecheck/security gates, partial purchase receiving, multi-invoice customer receipt allocation, per-warehouse valuation, report ranking options, category profit filters, and downloadable CSV import error reports.
+
+Final local checks:
+
+```bash
+npm run typecheck
+npm run build
+npm audit
+```
+
 ## 1. Run the Project
 
 Install dependencies:

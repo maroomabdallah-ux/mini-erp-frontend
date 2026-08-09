@@ -58,8 +58,7 @@ function categoryVisual(name) {
     return { Icon: PenLine, tone: "rose" };
   if (normalized.includes("furniture") || normalized.includes("chair"))
     return { Icon: Armchair, tone: "amber" };
-  if (normalized.includes("electronic"))
-    return { Icon: Zap, tone: "indigo" };
+  if (normalized.includes("electronic")) return { Icon: Zap, tone: "indigo" };
   if (normalized.includes("office") || normalized.includes("supplies"))
     return { Icon: Boxes, tone: "emerald" };
   return { Icon: Tag, tone: "neutral" };
@@ -164,11 +163,26 @@ export function ProductsPage() {
   const importProducts = useMutation({
     mutationFn: productsApi.importCsv,
     onSuccess: (result) => {
-      if (result.error_count)
+      if (result.error_count) {
         toast.warning(
           `${result.created_count} products imported. ${result.error_count} rows need attention.`,
         );
-      else
+        const csv = [
+          "row,field_errors",
+          ...result.errors.map(
+            (error) =>
+              `${error.row},"${JSON.stringify(error.field_errors).replaceAll('"', '""')}"`,
+          ),
+        ].join("\n");
+        const url = URL.createObjectURL(
+          new Blob([csv], { type: "text/csv;charset=utf-8" }),
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "product-import-errors.csv";
+        link.click();
+        URL.revokeObjectURL(url);
+      } else
         toast.success(`${result.created_count} products imported successfully`);
       refreshProducts();
     },
@@ -369,11 +383,14 @@ export function ProductsPage() {
                         <td>
                           <strong>{money(product.sale_price)}</strong>
                         </td>
-                    <td>
-                      {Number(product.min_stock_level).toLocaleString('en-US', {
-                        maximumFractionDigits: 0,
-                      })}
-                    </td>
+                        <td>
+                          {Number(product.min_stock_level).toLocaleString(
+                            "en-US",
+                            {
+                              maximumFractionDigits: 0,
+                            },
+                          )}
+                        </td>
                         <td>
                           <Status active={product.is_active} />
                         </td>

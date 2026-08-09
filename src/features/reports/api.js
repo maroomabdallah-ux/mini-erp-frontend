@@ -10,13 +10,13 @@ const query = (values) => {
 
 export const reportsApi = {
   dashboard: () => apiRequest("/reports/dashboard"),
-  profit: (dateFrom, dateTo) =>
+  profit: (dateFrom, dateTo, categoryId) =>
     apiRequest(
-      `/reports/profit?${query({ date_from: dateFrom, date_to: dateTo })}`,
+      `/reports/profit?${query({ date_from: dateFrom, date_to: dateTo, category_id: categoryId })}`,
     ),
-  topProducts: (dateFrom, dateTo) =>
+  topProducts: (dateFrom, dateTo, sortBy) =>
     apiRequest(
-      `/reports/top-products?${query({ date_from: dateFrom, date_to: dateTo })}`,
+      `/reports/top-products?${query({ date_from: dateFrom, date_to: dateTo, sort_by: sortBy })}`,
     ),
   valuation: () => apiRequest("/reports/inventory-valuation"),
   aging: (asOf) =>
