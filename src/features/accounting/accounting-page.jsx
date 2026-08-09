@@ -683,6 +683,20 @@ function SupplierPayments() {
     },
     onError: (error) => toast.error(error.message),
   });
+  const reverse = useMutation({
+    mutationFn: ({ id, reason }) =>
+      accountingApi.reverseSupplierPayment(id, reason),
+    onSuccess: () => {
+      toast.success("Supplier payment reversed");
+      [
+        "supplier-payments",
+        "supplier-outstanding",
+        "accounting-dashboard",
+        "journal-entries",
+      ].forEach((key) => client.invalidateQueries({ queryKey: [key] }));
+    },
+    onError: (error) => toast.error(error.message),
+  });
   const filteredOutstanding =
     outstanding.data?.filter(
       (row) =>
@@ -827,6 +841,7 @@ function SupplierPayments() {
           <span>Date</span>
           <span>Method</span>
           <span>Amount</span>
+          <span>Action</span>
         </div>
         {payments.data?.map((payment) => (
           <div key={payment.id}>
@@ -834,6 +849,26 @@ function SupplierPayments() {
             <span>{payment.payment_date}</span>
             <span>{payment.method}</span>
             <b>{money(payment.amount)}</b>
+            <span>
+              {payment.status === "posted" ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={reverse.isPending}
+                  onClick={() => {
+                    const reason = window.prompt(
+                      "Reason for reversing this payment",
+                    );
+                    if (reason?.trim().length >= 3)
+                      reverse.mutate({ id: payment.id, reason: reason.trim() });
+                  }}
+                >
+                  Reverse
+                </Button>
+              ) : (
+                <em>Reversed</em>
+              )}
+            </span>
           </div>
         ))}
       </div>

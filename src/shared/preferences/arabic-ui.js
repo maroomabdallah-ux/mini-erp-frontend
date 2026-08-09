@@ -13,6 +13,7 @@ export const arabicUi = {
   Categories: "التصنيفات",
   Warehouses: "المستودعات",
   Inventory: "المخزون",
+  Reports: "التقارير",
   Settings: "الإعدادات",
   "Workspace overview": "نظرة عامة على مساحة العمل",
   Account: "الحساب",

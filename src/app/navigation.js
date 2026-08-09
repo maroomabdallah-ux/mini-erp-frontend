@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   Package,
   ReceiptText,
+  BarChart3,
   Settings,
   Shield,
   ShoppingCart,
@@ -100,6 +101,13 @@ export const NAVIGATION_ITEMS = [
     labelKey: "nav.accounting",
     icon: Scale,
     permission: PERMISSIONS.ACCOUNTS_READ,
+  },
+  {
+    id: "reports",
+    label: "Reports",
+    labelKey: "nav.reports",
+    icon: BarChart3,
+    permission: PERMISSIONS.REPORTS_PROFIT_READ,
   },
   {
     id: "warehouses",

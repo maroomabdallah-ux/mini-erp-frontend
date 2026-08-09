@@ -2,7 +2,11 @@
 
 Frontend application built with React, JavaScript, Vite, Tailwind CSS, shadcn-style components, TanStack Query, and permission-based navigation.
 
-The completed scope includes authentication, role-aware dashboards, users, roles, permissions, audit logs, products and categories, suppliers, warehouses, inventory, purchase orders, goods receipts, customers, and sales quotations.
+The completed scope includes authentication, role-aware dashboards, administration, master data, procurement, inventory, quotations, sales orders, billing, payments, accounting, statements, and management reporting.
+
+## Project Status
+
+The functional frontend scope is complete. The Reports workspace provides an executive overview, profit analysis, twelve-month sales trend, top products, inventory valuation, receivables aging, and a running stock ledger. Accounting includes a read-first journal register, hierarchical Chart of Accounts, source-document navigation, supplier balances and payment reversal, bank-style statements, and invoice accounting timelines.
 
 ## 1. Run the Project
 

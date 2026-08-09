@@ -40,6 +40,11 @@ export const PERMISSIONS = Object.freeze({
   INVENTORY_COUNT: "inventory.count",
   INVENTORY_COUNT_APPROVE: "inventory.count.approve",
   INVENTORY_LOW_STOCK_READ: "inventory.low_stock.read",
+  REPORTS_PROFIT_READ: "reports.profit.read",
+  REPORTS_TOP_PRODUCTS_READ: "reports.top_products.read",
+  REPORTS_INVENTORY_VALUATION_READ: "reports.inventory_valuation.read",
+  REPORTS_RECEIVABLES_READ: "reports.receivables.read",
+  REPORTS_MONTHLY_SALES_READ: "reports.monthly_sales.read",
 });
 
 export function hasPermission(user, permission) {

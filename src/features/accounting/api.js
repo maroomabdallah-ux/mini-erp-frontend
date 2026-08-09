@@ -40,6 +40,11 @@ export const accountingApi = {
       method: "POST",
       body: JSON.stringify(input),
     }),
+  reverseSupplierPayment: (id, reason) =>
+    apiRequest(`/supplier-payments/${id}/reverse`, {
+      method: "POST",
+      body: JSON.stringify({ reason }),
+    }),
   statement: (type, id, from, to) =>
     apiRequest(`/accounting/${type}-statement/${id}?from=${from}&to=${to}`),
   salesSettings: () => apiRequest("/system-settings/sales"),
