@@ -14,7 +14,6 @@ export const purchasesApi = {
     if (supplierId) params.set("supplier_id", supplierId);
     return apiRequest(`/purchase-orders?${params.toString()}`);
   },
-  get: (id) => apiRequest(`/purchase-orders/${id}`),
   create: (input) =>
     apiRequest("/purchase-orders", {
       method: "POST",
@@ -45,6 +44,4 @@ export const purchasesApi = {
       method: "POST",
       body: JSON.stringify(input),
     }),
-  receipts: ({ page = 1, size = 20 } = {}) =>
-    apiRequest(`/goods-receipts?page=${page}&size=${size}`),
 };

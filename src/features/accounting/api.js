@@ -4,11 +4,6 @@ export const accountingApi = {
   accounts: () => apiRequest("/accounts"),
   createAccount: (input) =>
     apiRequest("/accounts", { method: "POST", body: JSON.stringify(input) }),
-  updateAccount: (id, input) =>
-    apiRequest(`/accounts/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(input),
-    }),
   dashboard: () => apiRequest("/accounting/dashboard"),
   entries: ({
     page = 1,
@@ -47,10 +42,4 @@ export const accountingApi = {
     }),
   statement: (type, id, from, to) =>
     apiRequest(`/accounting/${type}-statement/${id}?from=${from}&to=${to}`),
-  salesSettings: () => apiRequest("/system-settings/sales"),
-  updateSalesSettings: (input) =>
-    apiRequest("/system-settings/sales", {
-      method: "PUT",
-      body: JSON.stringify(input),
-    }),
 };
