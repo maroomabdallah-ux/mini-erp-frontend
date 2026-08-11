@@ -36,6 +36,7 @@ Start the development server:
 
 ```bash
 npm run dev
+
 ```
 
 The frontend requires the Mini ERP backend to be running separately.

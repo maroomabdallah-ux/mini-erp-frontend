@@ -1,6 +1,7 @@
 import { apiRequest } from "@/shared/api/api-client";
 
 export const purchasesApi = {
+  get: (id) => apiRequest(`/purchase-orders/${id}`),
   list: ({
     page = 1,
     size = 20,

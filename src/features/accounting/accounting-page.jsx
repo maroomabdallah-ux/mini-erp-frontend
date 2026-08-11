@@ -108,6 +108,7 @@ export function AccountingPage({ onNavigate }) {
         <Journals
           canManage={canManage}
           onNavigate={onNavigate}
+          onOpenSupplierPayments={() => setTab("payments")}
           initialEntryId={
             documentTarget?.kind === "journal" ? documentTarget.id : null
           }
@@ -156,7 +157,12 @@ function AccountingDashboard({ onOpen }) {
   );
 }
 
-function Journals({ canManage, onNavigate, initialEntryId }) {
+function Journals({
+  canManage,
+  onNavigate,
+  onOpenSupplierPayments,
+  initialEntryId,
+}) {
   const [filters, setFilters] = useState({
     search: "",
     dateFrom: "",
@@ -290,6 +296,7 @@ function Journals({ canManage, onNavigate, initialEntryId }) {
         open={Boolean(selectedId)}
         onOpenChange={(open) => !open && setSelectedId(null)}
         onNavigate={onNavigate}
+        onOpenSupplierPayments={onOpenSupplierPayments}
       />
     </section>
   );
@@ -408,7 +415,13 @@ function ManualEntryDialog({ open, onOpenChange, accounts }) {
   );
 }
 
-function JournalDetail({ entry, open, onOpenChange, onNavigate }) {
+function JournalDetail({
+  entry,
+  open,
+  onOpenChange,
+  onNavigate,
+  onOpenSupplierPayments,
+}) {
   if (!entry) return null;
   const debits = entry.lines.filter((line) => Number(line.debit) > 0);
   const credits = entry.lines.filter((line) => Number(line.credit) > 0);
@@ -460,8 +473,8 @@ function JournalDetail({ entry, open, onOpenChange, onNavigate }) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() =>
-                openDocument(onNavigate, {
+              onClick={() => {
+                const target = {
                   route: entry.source_route,
                   id: entry.source_document_id,
                   kind:
@@ -470,8 +483,14 @@ function JournalDetail({ entry, open, onOpenChange, onNavigate }) {
                       : entry.source_route === "purchases"
                         ? "purchase-order"
                         : "invoice",
-                })
-              }
+                };
+                if (target.kind === "supplier-payment") {
+                  onOpenChange(false);
+                  onOpenSupplierPayments();
+                  return;
+                }
+                openDocument(onNavigate, target);
+              }}
             >
               Open source document <ChevronRight />
             </Button>

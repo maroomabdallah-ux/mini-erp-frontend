@@ -1,6 +1,7 @@
 import { apiRequest } from "@/shared/api/api-client";
 
 export const billingApi = {
+  get: (id) => apiRequest(`/invoices/${id}`),
   list: ({
     page = 1,
     size = 20,
