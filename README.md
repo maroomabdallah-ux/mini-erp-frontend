@@ -18,6 +18,71 @@ npm run build
 npm audit
 ```
 
+## ERP AI Assistant
+
+The authenticated application includes a responsive AI Assistant chat interface
+for asking questions about Mini ERP data. The frontend implementation uses the
+project's existing stack and conventions:
+
+- **React 19** with JavaScript and JSX.
+- **Vite** for development and production builds.
+- **Tailwind CSS** and the existing shadcn-style UI components.
+- **Lucide React** icons.
+- The shared `apiRequest` client for backend communication.
+- The existing JWT access-token and refresh-token flow.
+
+The assistant is available from the **AI Assistant** button in the application
+top bar. It opens as a large floating chat window in the bottom-right corner.
+The interface supports:
+
+- User and assistant message bubbles with preserved line breaks.
+- Enter to send and Shift + Enter for a new line.
+- A loading state while the Agent is responding.
+- Friendly errors without exposing backend details.
+- Automatic scrolling to the latest message.
+- A responsive layout for desktop and mobile screens.
+- A new-conversation action and deletion of the active conversation.
+- A conversation-history panel opened from the three-line menu button.
+- Reopening and continuing previously saved conversations.
+
+The history panel is hidden by default to keep the chat focused. Opening it
+expands the assistant window and displays only conversations owned by the
+currently authenticated user.
+
+### Permission-Aware Suggestions
+
+The empty chat state shows up to four example questions based on the current
+user's effective permissions. For example, a warehouse user may see inventory
+and low-stock questions, a sales user may see sales, quotation, and customer
+questions, and an accountant may see invoice, payment, account, or journal-entry
+questions. Suggestions are filtered using the same permission data already used
+by the rest of the frontend.
+
+Suggestions improve the experience but do not grant access. The backend remains
+the security authority and independently filters the Agent tools available to
+the user.
+
+### API and Security
+
+The frontend sends messages only to the FastAPI backend:
+
+```text
+POST /agent/chat
+```
+
+It also uses the protected `/agent/conversations` endpoints to list, load, and
+delete saved conversations. All requests go through the existing API client,
+which automatically includes the logged-in user's JWT access token and performs
+the normal token-refresh flow.
+
+The browser never calls OpenAI directly. No OpenAI API key, LangChain code, or
+model credential is present in the frontend.
+
+The assistant is currently **read-only**. It can explain and summarize authorized
+ERP information, but it cannot create, edit, delete, approve, post, transfer, or
+otherwise modify ERP records. All write operations continue to use the normal
+permission-protected application workflows.
+
 ## 1. Run the Project
 
 Install dependencies:

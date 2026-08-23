@@ -9,6 +9,7 @@ import { hasPermission } from '@/shared/permissions/permissions'
 import { usePreferences } from '@/shared/preferences/preferences-provider'
 import { MiniErpLogo } from '@/components/brand/mini-erp-logo'
 import { ActionCenter } from '@/components/layout/action-center'
+import { AiAssistant } from '@/features/ai-assistant/components/ai-assistant'
 
 const initials = (user) => `${user?.first_name?.[0] || ''}${user?.last_name?.[0] || ''}` || 'U'
 export function AppShell({ children, currentPage, onNavigate }) {
@@ -25,7 +26,7 @@ export function AppShell({ children, currentPage, onNavigate }) {
       <div className="sidebar-foot"><p>{t('shell.version')}</p><span>{t('shell.primary')}</span></div>
     </aside>
     <div className="content-area">
-      <header className="topbar"><Button variant="ghost" size="icon" className="menu-button" onClick={() => setOpen(true)}><Menu /></Button><div className="topbar-spacer" /><ActionCenter user={user} currentPage={currentPage} onNavigate={onNavigate} /><div className="topbar-divider" />
+      <header className="topbar"><Button variant="ghost" size="icon" className="menu-button" onClick={() => setOpen(true)}><Menu /></Button><div className="topbar-spacer" /><AiAssistant /><ActionCenter user={user} currentPage={currentPage} onNavigate={onNavigate} /><div className="topbar-divider" />
         <DropdownMenu><DropdownMenuTrigger asChild><button className="profile-trigger"><Avatar><AvatarFallback>{initials(user)}</AvatarFallback></Avatar><div><strong>{user.first_name} {user.last_name}</strong><span>{user.roles?.find((role) => role.is_active)?.name || 'User'}</span></div><ChevronDown /></button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem onSelect={() => onNavigate('settings')}>{t('shell.profile')}</DropdownMenuItem><DropdownMenuSeparator /><DropdownMenuItem onSelect={() => void logout()} className="text-destructive"><LogOut />{t('shell.signOut')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
       </header>
       <main className="main-content">{children}</main>
