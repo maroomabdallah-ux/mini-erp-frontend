@@ -19,7 +19,7 @@ import {
   hasPermission,
   PERMISSIONS,
 } from "@/shared/permissions/permissions";
-import { conversationsApi, sendAgentMessage } from "../api";
+import { agentActionsApi, conversationsApi, sendAgentMessage } from "../api";
 
 const promptOptions = [
   {
@@ -107,11 +107,13 @@ const promptOptions = [
 const friendlyError =
   "The AI Assistant could not process your request. Please try again.";
 
-const createMessage = (role, content, isError = false) => ({
+const createMessage = (role, content, isError = false, pendingAction = null) => ({
   id: crypto.randomUUID(),
   role,
   content,
   isError,
+  pendingAction,
+  actionStatus: pendingAction ? "pending" : null,
 });
 
 export function AiAssistant() {
@@ -172,7 +174,7 @@ export function AiAssistant() {
       setActiveConversationId(response.conversation_id);
       setMessages((current) => [
         ...current,
-        createMessage("assistant", response.answer),
+        createMessage("assistant", response.answer, false, response.pending_action),
       ]);
       void refreshConversations();
     } catch {
@@ -182,6 +184,47 @@ export function AiAssistant() {
       ]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handlePendingAction = async (messageId, actionId, operation) => {
+    setMessages((current) =>
+      current.map((message) =>
+        message.id === messageId ? { ...message, actionStatus: "submitting" } : message,
+      ),
+    );
+    try {
+      const result = await agentActionsApi[operation](actionId);
+      const completed = operation === "confirm";
+      const createdReference =
+        result.action_type === "confirm_sales_order"
+          ? `Sales Order confirmed successfully: ${result.sales_order_number}`
+          : result.action_type === "create_purchase_order"
+          ? `Purchase Order created successfully: ${result.purchase_order_number}`
+          : `Quotation created successfully: ${result.quotation_number}`;
+      setMessages((current) => [
+        ...current.map((message) =>
+          message.id === messageId
+            ? { ...message, actionStatus: completed ? "executed" : "cancelled" }
+            : message,
+        ),
+        createMessage(
+          "assistant",
+          completed
+            ? createdReference
+            : "The pending action was cancelled.",
+        ),
+      ]);
+    } catch {
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === messageId ? { ...message, actionStatus: "pending" } : message,
+        ),
+      );
+      setMessages((current) => [
+        ...current,
+        createMessage("assistant", "The quotation action could not be completed.", true),
+      ]);
     }
   };
 
@@ -389,6 +432,81 @@ export function AiAssistant() {
                         {message.role === "user" ? "You" : "AI Assistant"}
                       </strong>
                       <p>{message.content}</p>
+                      {message.pendingAction && (
+                        <div className="ai-action-card">
+                          <strong>
+                            {message.pendingAction.action_type === "confirm_sales_order"
+                              ? "Sales Order confirmation"
+                              : message.pendingAction.action_type === "create_purchase_order"
+                              ? "Purchase Order confirmation"
+                              : "Quotation confirmation"}
+                          </strong>
+                          {message.pendingAction.summary.sales_order && (
+                            <span>
+                              Sales Order: {message.pendingAction.summary.sales_order.number}
+                            </span>
+                          )}
+                          <span>
+                            {message.pendingAction.summary.supplier?.name ??
+                              message.pendingAction.summary.customer?.name}
+                          </span>
+                          {message.pendingAction.summary.warehouse && (
+                            <span>
+                              Warehouse: {message.pendingAction.summary.warehouse.name}
+                            </span>
+                          )}
+                          {message.pendingAction.summary.expected_date && (
+                            <span>
+                              Expected: {message.pendingAction.summary.expected_date}
+                            </span>
+                          )}
+                          {message.pendingAction.summary.current_status && (
+                            <span>
+                              Current status: {message.pendingAction.summary.current_status}
+                            </span>
+                          )}
+                          <ul>
+                            {message.pendingAction.summary.items.map((item) => (
+                              <li key={item.product_id}>
+                                {item.name} × {item.quantity} — {item.line_total}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="ai-action-total">
+                            <span>Total</span>
+                            <b>{message.pendingAction.summary.total_amount}</b>
+                          </div>
+                          <div className="ai-action-buttons">
+                            <Button
+                              size="sm"
+                              disabled={message.actionStatus !== "pending"}
+                              onClick={() =>
+                                void handlePendingAction(
+                                  message.id,
+                                  message.pendingAction.action_id,
+                                  "confirm",
+                                )
+                              }
+                            >
+                              Confirm
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={message.actionStatus !== "pending"}
+                              onClick={() =>
+                                void handlePendingAction(
+                                  message.id,
+                                  message.pendingAction.action_id,
+                                  "cancel",
+                                )
+                              }
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </article>
                 ))

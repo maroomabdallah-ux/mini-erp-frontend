@@ -16,3 +16,10 @@ export const conversationsApi = {
   remove: (id) =>
     apiRequest(`/agent/conversations/${id}`, { method: "DELETE" }),
 };
+
+export const agentActionsApi = {
+  confirm: (id) =>
+    apiRequest(`/agent/actions/${id}/confirm`, { method: "POST" }),
+  cancel: (id) =>
+    apiRequest(`/agent/actions/${id}/cancel`, { method: "POST" }),
+};

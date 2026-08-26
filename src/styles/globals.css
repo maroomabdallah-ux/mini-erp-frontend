@@ -1113,6 +1113,13 @@ button {
 }
 .ai-message.user p { color: #fff; background: linear-gradient(135deg, #7562d5, #5b47bd); border-color: transparent; border-radius: 16px 5px 16px 16px; box-shadow: 0 7px 20px rgba(85, 65, 180, .18); }
 .ai-message.error p { color: #a83a48; background: #fff2f3; border-color: #f3cbd0; }
+.ai-action-card { display: grid; gap: 10px; padding: 14px; border: 1px solid color-mix(in srgb, var(--border) 80%, #7562d5); border-radius: 14px; background: var(--background); box-shadow: 0 8px 24px rgba(70, 53, 145, .08); }
+.ai-action-card > strong { color: var(--foreground); font-size: .82rem; }
+.ai-action-card > span, .ai-action-card li { color: var(--muted-foreground); font-size: .72rem; }
+.ai-action-card ul { display: grid; gap: 4px; margin: 0; padding-inline-start: 18px; }
+.ai-action-total { display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--border); font-size: .8rem; }
+.ai-action-buttons { display: flex; gap: 8px; }
+.ai-action-buttons button { flex: 1; }
 .ai-message.thinking p { color: var(--muted-foreground); }
 .ai-message.thinking p span { display: inline-block; width: 5px; height: 5px; margin-inline-end: 3px; background: #796bd0; border-radius: 50%; animation: ai-thinking 1s infinite alternate; }
 .ai-message.thinking p span:nth-child(2) { animation-delay: .2s; }
